@@ -7,7 +7,10 @@ function showStep(n) {
 /* データ保持 */
 const selected = { date: null, service: null, time: null, pax: null };
 
-/* Step1 — 日付 */
+const apiUrl =
+    "https://script.google.com/macros/s/AKfycbw10hWXXIzG7XcKExwy64DOO6BMH7VBMVM8O-yxnFz2CpQP-A-TIvghm05ZuNcAXfOYqQ/exec";
+
+/* ========== Step1 初期化 ========== */
 function setToday() {
     const t = new Date();
     const yyyy = t.getFullYear();
@@ -17,8 +20,9 @@ function setToday() {
 }
 setToday();
 
-document.getElementById("prevDate").onclick = () => changeDate(-1);
-document.getElementById("nextDate").onclick = () => changeDate(1);
+/* 日付変更ボタン */
+document.getElementById("prevDate").onclick = () => { changeDate(-1); refreshServiceButtons(); };
+document.getElementById("nextDate").onclick = () => { changeDate(1); refreshServiceButtons(); };
 
 function changeDate(d) {
     const input = document.getElementById("resDate");
@@ -27,12 +31,58 @@ function changeDate(d) {
     input.value = c.toISOString().split("T")[0];
 }
 
-/* Step1 — Service & Time */
+/* 日付 or 人数変更でサービスチェック */
+document.getElementById("resDate").onchange = refreshServiceButtons;
+document.getElementById("resPax").onchange = refreshServiceButtons;
+
+/* ========== サービス満席チェック ========== */
+async function refreshServiceButtons() {
+    const date = document.getElementById("resDate").value;
+    const pax = document.getElementById("resPax").value;
+
+    if (!date) return;
+
+    const payload = { date, pax };
+    const formData = new FormData();
+    formData.append("json", JSON.stringify(payload));
+    formData.append("mode", "serviceCheck");
+
+    try {
+        const res = await fetch(apiUrl, { method: "POST", body: formData });
+        const availability = await res.json();
+
+        document.querySelectorAll(".service-btn").forEach(btn => {
+            const service = btn.dataset.service;
+            const status = availability[service]?.status;
+
+            if (status === "full") {
+                btn.classList.add("full");
+                btn.innerHTML = `${btn.innerText} — Complet`;
+                btn.disabled = true;
+            } else {
+                btn.classList.remove("full");
+                btn.disabled = false;
+                btn.innerText = service === "lunch" ? "Déjeuner" : "Dîner";
+            }
+        });
+
+    } catch (err) {
+        console.error("ServiceCheck error:", err);
+    }
+}
+
+/* 初期呼び出し */
+refreshServiceButtons();
+
+/* ========== Step1 — Service & Time ========== */
 document.querySelectorAll(".service-btn").forEach(btn => {
     btn.onclick = () => {
+        if (btn.disabled) return; // 満席は無効
+
         selected.service = btn.dataset.service;
         document.querySelectorAll(".service-btn").forEach(b => b.style.background = "");
         btn.style.background = "#ccc";
+
         updateTimeButtons();
     };
 });
@@ -61,7 +111,7 @@ function updateTimeButtons() {
     });
 }
 
-/* Next → Step2 */
+/* ========== Step1 → Step2 ========== */
 document.getElementById("toStep2").onclick = () => {
     selected.date = document.getElementById("resDate").value;
     selected.pax = document.getElementById("resPax").value;
@@ -77,7 +127,7 @@ document.getElementById("toStep2").onclick = () => {
     showStep(2);
 };
 
-/* Step2 → Step3 */
+/* ========== Step2 → Step3 ========== */
 document.getElementById("back1").onclick = () => showStep(1);
 
 document.getElementById("toStep3").onclick = () => {
@@ -97,7 +147,7 @@ document.getElementById("toStep3").onclick = () => {
     showStep(3);
 };
 
-/* Step3 → Step4 */
+/* ========== Step3 → Step4 ========== */
 document.getElementById("back2").onclick = () => showStep(2);
 
 document.getElementById("toStep4").onclick = () => {
@@ -127,7 +177,7 @@ document.getElementById("toStep4").onclick = () => {
     showStep(4);
 };
 
-/* Step4 — API送信 */
+/* ========== Step4 — API送信 ========== */
 document.getElementById("back3").onclick = () => showStep(3);
 
 document.getElementById("sendReservation").onclick = async () => {
@@ -153,9 +203,6 @@ document.getElementById("sendReservation").onclick = async () => {
         comment: selected.comment,
         optin: document.getElementById("optin").checked
     };
-
-    const apiUrl =
-        "https://script.google.com/macros/s/AKfycbw10hWXXIzG7XcKExwy64DOO6BMH7VBMVM8O-yxnFz2CpQP-A-TIvghm05ZuNcAXfOYqQ/exec";
 
     const formData = new FormData();
     formData.append("json", JSON.stringify(payload));
@@ -188,7 +235,3 @@ document.getElementById("sendReservation").onclick = async () => {
         showStep(5);
     }
 };
-
-
-
-
