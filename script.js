@@ -7,10 +7,11 @@ function showStep(n) {
 /* データ保持 */
 const selected = { date: null, service: null, time: null, pax: null };
 
+/* ===== API URL ===== */
 const apiUrl =
     "https://script.google.com/macros/s/AKfycby-Fi8vtXXNlSJr8aJBtcgd9xasWxwnRqgxwN3mUGM5FEP8btNRc7OO0tQVYFEbmjQxWQ/exec";
 
-/* ===== デバウンス関数（最優先で定義） ===== */
+/* ===== デバウンス関数 ===== */
 let checkTimer = null;
 function scheduleCapacityCheck() {
     clearTimeout(checkTimer);
@@ -62,7 +63,7 @@ async function refreshServiceButtons() {
             const service = btn.dataset.service;
             const status = availability[service]?.status;
 
-            // テキストは textContent にする（innerHTMLは禁止）
+            // 安全にテキスト変更
             btn.textContent = service === "lunch" ? "Déjeuner" : "Dîner";
 
             if (status === "full") {
@@ -80,10 +81,10 @@ async function refreshServiceButtons() {
     }
 }
 
-/* 初回読み込み */
+/* 初回 */
 scheduleCapacityCheck();
 
-/* ========== Step1 — Service & Time ========== */
+/* ========== Step1 — Service 選択 ========== */
 document.querySelectorAll(".service-btn").forEach(btn => {
     btn.addEventListener("click", () => {
         if (btn.disabled) return;
@@ -96,6 +97,7 @@ document.querySelectorAll(".service-btn").forEach(btn => {
     });
 });
 
+/* 時間ボタン生成 */
 function updateTimeButtons() {
     const box = document.getElementById("timeButtons");
     box.innerHTML = "";
@@ -105,7 +107,6 @@ function updateTimeButtons() {
 
     const lunch = ["12:00", "12:30", "13:00", "13:30"];
     const dinner = ["20:00", "20:30", "21:00"];
-
     const times = selected.service === "lunch" ? lunch : dinner;
 
     times.forEach(t => {
@@ -199,10 +200,7 @@ document.getElementById("sendReservation").onclick = async () => {
     document.getElementById("loadingOverlay").style.display = "flex";
 
     // 送信前チェック
-    const checkPayload = {
-        date: selected.date,
-        pax: selected.pax
-    };
+    const checkPayload = { date: selected.date, pax: selected.pax };
 
     const formCheck = new FormData();
     formCheck.append("json", JSON.stringify(checkPayload));
