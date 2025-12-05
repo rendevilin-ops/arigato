@@ -21,25 +21,12 @@ function setToday() {
 }
 setToday();
 
-/* 日付変更ボタン */
-document.getElementById("prevDate").onclick = () => { changeDate(-1); };
-document.getElementById("nextDate").onclick = () => { changeDate(1); };
-
-function changeDate(d) {
-    const input = document.getElementById("resDate");
-    const c = new Date(input.value);
-    c.setDate(c.getDate() + d);
-    input.value = c.toISOString().split("T")[0];
-}
-
-/* ========== Step1 — Service 選択 ========== */
+/* Service のボタンだけ先に動かす */
 document.querySelectorAll(".service-btn").forEach(btn => {
     btn.addEventListener("click", () => {
         selected.service = btn.dataset.service;
-
         document.querySelectorAll(".service-btn").forEach(b => b.style.background = "");
         btn.style.background = "#ccc";
-
         updateTimeButtons();
     });
 });
@@ -118,24 +105,22 @@ document.getElementById("toStep4").onclick = () => {
     <strong>📅 Date :</strong> ${selected.date}<br>
     <strong>🕒 Heure :</strong> ${selected.time} (${selected.service})<br>
     <strong>👥 Nombre :</strong> ${selected.pax}<br><br>
-
-    <strong>👤 Client :</strong><br>
+    <strong>Client :</strong><br>
     ${document.getElementById("lastName").value} ${document.getElementById("firstName").value}<br>
     📧 ${document.getElementById("email").value}<br>
     📞 ${document.getElementById("phone").value}<br><br>
-
     <strong>Remarques :</strong><br>
     Enfants : ${selected.kids}<br>
     Végétariens : ${selected.veg}<br>
     Occasion spéciale : ${selected.celebration ? "Oui" : "Non"}<br>
     Commentaire : ${selected.comment || "—"}
-  `;
+    `;
 
     document.getElementById("summaryAll").innerHTML = html;
     showStep(4);
 };
 
-/* ========= Step4 — 送信(JSON) ========== */
+/* ========= Step4 — 送信（FormData方式 = doPost に確実に届く） ========== */
 document.getElementById("back3").onclick = () => showStep(3);
 
 document.getElementById("sendReservation").onclick = async () => {
@@ -157,28 +142,39 @@ document.getElementById("sendReservation").onclick = async () => {
         pax: selected.pax,
         kidsCount: selected.kids,
         celebration: selected.celebration,
-        vegCount: selected.veg,
+        vegCount: selected.veg || 0,
         comment: selected.comment,
         optin: document.getElementById("optin").checked
     };
 
+    // ★★★ FormData にする（これなら 100% doPost に届く）
+    const form = new FormData();
+    form.append("json", JSON.stringify(payload));
+
     try {
         const res = await fetch(apiUrl, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload)
+            body: form
         });
 
         const json = await res.json();
 
         document.getElementById("loadingOverlay").style.display = "none";
-        document.getElementById("finalMessage").innerText = JSON.stringify(json);
+
+        if (json.ok === true) {
+            document.getElementById("finalMessage").innerText =
+                "Votre réservation a été envoyée. Merci beaucoup ! 🙏";
+        } else {
+            document.getElementById("finalMessage").innerText =
+                "Erreur : " + json.message;
+        }
 
         showStep(5);
 
     } catch (err) {
         document.getElementById("loadingOverlay").style.display = "none";
-        document.getElementById("finalMessage").innerText = "Erreur réseau";
+        document.getElementById("finalMessage").innerText =
+            "Erreur réseau. Veuillez réessayer.";
         showStep(5);
     }
 };
