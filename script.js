@@ -8,7 +8,7 @@ function showStep(n) {
 const selected = { date: null, service: null, time: null, pax: null };
 
 const apiUrl =
-    "https://script.google.com/macros/s/AKfycbypngFtt9yRgIS-xFA9fWmCqZgKAbyK9trwHJCUh9a8fvC_L5LSPsGrlI9dioXj9R0ceA/exec";
+    "https://script.google.com/macros/s/AKfycbxOghdhhuqc3XwY5bU0j21vTgu23hKAZAP1eKQMIQVL6dSAYX6GCP5dROQDwuwqJfxh0Q/exec";
 
 /* ========== Step1 初期化 ========== */
 function setToday() {
@@ -235,4 +235,5 @@ document.getElementById("sendReservation").onclick = async () => {
         showStep(5);
     }
 };
+
 
