@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    <title>Réservation Arigato</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+    <h2>Réservation Arigato</h2>
+
+    <!-- STEP 1 ---------------------------------------------------->
+    <div class="step active" id="step1">
+
+        <h3>1. Choisissez la date, le service et le nombre de personnes</h3>
+
+        <!-- Date -->
+        <label>Date</label>
+        <div style="display:flex; gap:10px; align-items:center;">
+            <button type="button" id="prevDate">←</button>
+            <input type="date" id="resDate" style="flex:1">
+            <button type="button" id="nextDate">→</button>
+        </div><br>
+
+        <!-- Pax -->
+        <label>Nombre de personnes</label>
+        <select id="resPax">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+            <option>6</option>
+            <option>7</option>
+        </select><br><br>
+
+        <!-- Service -->
+        <label>Service</label>
+        <div id="serviceButtons">
+            <button type="button" class="service-btn" data-service="lunch">Déjeuner</button>
+            <button type="button" class="service-btn" data-service="dinner">Dîner</button>
+        </div><br><br>
+
+        <!-- Time -->
+        <label>Heure</label>
+        <div id="timeButtons"></div>
+
+        <button id="toStep2">Continuer</button>
+    </div>
+
+
+
+    <!-- STEP 2 ---------------------------------------------------->
+    <div class="step" id="step2">
+        <h3>2. Informations du client</h3>
+
+        <div id="summary1" class="summary-box"></div>
+
+        <label>Nom</label>
+        <input type="text" id="lastName"><br>
+
+        <label>Prénom</label>
+        <input type="text" id="firstName"><br>
+
+        <label>Email</label>
+        <input type="email" id="email"><br>
+
+        <label>Téléphone</label>
+        <input type="text" id="phone"><br><br>
+
+        <label>
+            <input type="checkbox" id="optin">
+            J'accepte de recevoir les informations Arigato<br>
+        </label>
+
+        <div class="nav-btns">
+            <button id="back1">Retour</button>
+            <button id="toStep3">Continuer</button>
+        </div>
+    </div>
+
+
+    <!-- STEP 3 ---------------------------------------------------->
+    <div class="step" id="step3">
+        <h3>3. Remarques</h3>
+
+        <div id="summary2" class="summary-box"></div>
+
+        <label>Enfants (moins de 15 ans)</label>
+        <select id="kids">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+        </select><br>
+
+        <label>Nombre de personnes végétariennes</label>
+        <select id="vegCount">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+        </select><br>
+
+        <label>
+            <input type="checkbox" id="celebration">
+            Occasion spéciale (anniversaire, etc.)
+        </label><br><br>
+
+        <label>Commentaire</label>
+        <textarea id="comment"></textarea>
+
+        <div class="nav-btns">
+            <button id="back2">Retour</button>
+            <button id="toStep4">Continuer</button>
+        </div>
+    </div>
+
+
+
+    <!-- STEP 4 ---------------------------------------------------->
+    <div class="step" id="step4">
+        <h3>4. Confirmation</h3>
+        <div id="summaryAll" class="summary-box"></div>
+
+        <div class="nav-btns">
+            <button id="back3">Retour</button>
+            <button id="sendReservation">Envoyer</button>
+        </div>
+    </div>
+
+
+
+    <!-- STEP 5 ---------------------------------------------------->
+    <div class="step" id="step5">
+        <h3 id="finalMessage"></h3>
+        <p style="margin-top:20px;">🎄 Message spécial Noël ici…</p>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay">
+        <div class="spinner"></div>
+        <div class="loading-text">Envoi en cours…</div>
+    </div>
+
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
