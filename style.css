@@ -101,4 +101,12 @@ textarea {
     margin-top: 16px;
     font-size: 18px;
     color: white;
+
+}
+
+.service-btn.full {
+    background: #444 !important;
+    color: #bbb !important;
+    text-decoration: line-through;
+    cursor: not-allowed;
 }
