@@ -8,7 +8,14 @@ function showStep(n) {
 const selected = { date: null, service: null, time: null, pax: null };
 
 const apiUrl =
-    "https://script.google.com/macros/s/AKfycbzwEN2jUECgMSqGeFiF1mbzrux3yQ_y5-Ny0z1hRiMIhTlo5vJUudLdyneo_XNds-Cmgg/exec";
+    "https://script.google.com/macros/s/AKfycby-Fi8vtXXNlSJr8aJBtcgd9xasWxwnRqgxwN3mUGM5FEP8btNRc7OO0tQVYFEbmjQxWQ/exec";
+
+/* ===== デバウンス関数（最優先で定義） ===== */
+let checkTimer = null;
+function scheduleCapacityCheck() {
+    clearTimeout(checkTimer);
+    checkTimer = setTimeout(refreshServiceButtons, 300);
+}
 
 /* ========== Step1 初期化 ========== */
 function setToday() {
@@ -32,15 +39,8 @@ function changeDate(d) {
 }
 
 /* 日付 or 人数変更 */
-document.getElementById("resDate").onchange = scheduleCapacityCheck;
-document.getElementById("resPax").onchange = scheduleCapacityCheck;
-
-/* ===== デバウンス (API 連続呼び出し防止) ===== */
-let checkTimer = null;
-function scheduleCapacityCheck() {
-    clearTimeout(checkTimer);
-    checkTimer = setTimeout(refreshServiceButtons, 300);
-}
+document.getElementById("resDate").addEventListener("change", scheduleCapacityCheck);
+document.getElementById("resPax").addEventListener("change", scheduleCapacityCheck);
 
 /* ========== サービス満席チェック ========== */
 async function refreshServiceButtons() {
@@ -62,12 +62,12 @@ async function refreshServiceButtons() {
             const service = btn.dataset.service;
             const status = availability[service]?.status;
 
-            // テキストを毎回リセット
-            btn.innerHTML = service === "lunch" ? "Déjeuner" : "Dîner";
+            // テキストは textContent にする（innerHTMLは禁止）
+            btn.textContent = service === "lunch" ? "Déjeuner" : "Dîner";
 
             if (status === "full") {
                 btn.classList.add("full");
-                btn.innerHTML += " — Complet";
+                btn.textContent += " — Complet";
                 btn.disabled = true;
             } else {
                 btn.classList.remove("full");
@@ -80,20 +80,20 @@ async function refreshServiceButtons() {
     }
 }
 
-/* 初回読み込み時 */
+/* 初回読み込み */
 scheduleCapacityCheck();
 
 /* ========== Step1 — Service & Time ========== */
 document.querySelectorAll(".service-btn").forEach(btn => {
-    btn.onclick = () => {
-        if (btn.disabled) return; // 満席は無効
+    btn.addEventListener("click", () => {
+        if (btn.disabled) return;
 
         selected.service = btn.dataset.service;
         document.querySelectorAll(".service-btn").forEach(b => b.style.background = "");
         btn.style.background = "#ccc";
 
         updateTimeButtons();
-    };
+    });
 });
 
 function updateTimeButtons() {
@@ -105,6 +105,7 @@ function updateTimeButtons() {
 
     const lunch = ["12:00", "12:30", "13:00", "13:30"];
     const dinner = ["20:00", "20:30", "21:00"];
+
     const times = selected.service === "lunch" ? lunch : dinner;
 
     times.forEach(t => {
@@ -136,7 +137,7 @@ document.getElementById("toStep2").onclick = () => {
     showStep(2);
 };
 
-/* ========== Step2 → Step3 ========== */
+/* ========= Step2 → Step3 ========== */
 document.getElementById("back1").onclick = () => showStep(1);
 
 document.getElementById("toStep3").onclick = () => {
@@ -156,7 +157,7 @@ document.getElementById("toStep3").onclick = () => {
     showStep(3);
 };
 
-/* ========== Step3 → Step4 ========== */
+/* ========= Step3 → Step4 ========== */
 document.getElementById("back2").onclick = () => showStep(2);
 
 document.getElementById("toStep4").onclick = () => {
@@ -186,18 +187,18 @@ document.getElementById("toStep4").onclick = () => {
     showStep(4);
 };
 
-/* ========== Step4 — API送信 ========== */
+/* ========= Step4 — 送信 ========== */
 document.getElementById("back3").onclick = () => showStep(3);
 
 document.getElementById("sendReservation").onclick = async () => {
 
     const btn = document.getElementById("sendReservation");
     btn.disabled = true;
-    btn.innerText = "Vérification…";
+    btn.textContent = "Vérification…";
 
     document.getElementById("loadingOverlay").style.display = "flex";
 
-    // ① 送信前に再チェック
+    // 送信前チェック
     const checkPayload = {
         date: selected.date,
         pax: selected.pax
@@ -210,18 +211,17 @@ document.getElementById("sendReservation").onclick = async () => {
     const checkRes = await fetch(apiUrl, { method: "POST", body: formCheck });
     const availability = await checkRes.json();
 
-    // 該当サービスが満席なら送信拒否
     if (availability[selected.service].status === "full") {
         document.getElementById("loadingOverlay").style.display = "none";
         btn.disabled = false;
-        btn.innerText = "Envoyer";
+        btn.textContent = "Envoyer";
 
         alert("Désolé, ce service est complet. Veuillez choisir un autre horaire.");
         return;
     }
 
-    // ② ここから通常予約処理
-    btn.innerText = "Envoi…";
+    // 送信
+    btn.textContent = "Envoi…";
 
     const payload = {
         date: selected.date,
@@ -265,21 +265,3 @@ document.getElementById("sendReservation").onclick = async () => {
         showStep(5);
     }
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
