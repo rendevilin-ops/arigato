@@ -9,7 +9,7 @@ const selected = { date: null, service: null, time: null, pax: null };
 
 /* ===== API URL ===== */
 const apiUrl =
-    "https://script.google.com/macros/s/AKfycbxHY7io8a9AK9VtBtkKj-c1wNstpRqbiR6Q4DgyjLufmOcEBNIlThwB8Le2ldcN0ldwvQ/exec";
+    "https://script.google.com/macros/s/AKfycbxsFkHIX1g-BwLX6B7I2xy6ioFrmQ5q4Jx7uLjGAoy5X3CimL6rX1KOL-Aop0mrnRVOnA/exec";
 
 /* ===== デバウンス関数 ===== */
 let checkTimer = null;
@@ -263,4 +263,5 @@ document.getElementById("sendReservation").onclick = async () => {
         showStep(5);
     }
 };
+
 
