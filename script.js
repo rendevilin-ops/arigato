@@ -193,9 +193,35 @@ document.getElementById("sendReservation").onclick = async () => {
 
     const btn = document.getElementById("sendReservation");
     btn.disabled = true;
-    btn.innerText = "Envoi…";
+    btn.innerText = "Vérification…";
 
     document.getElementById("loadingOverlay").style.display = "flex";
+
+    // ① 送信前に再チェック
+    const checkPayload = {
+        date: selected.date,
+        pax: selected.pax
+    };
+
+    const formCheck = new FormData();
+    formCheck.append("json", JSON.stringify(checkPayload));
+    formCheck.append("mode", "serviceCheck");
+
+    const checkRes = await fetch(apiUrl, { method: "POST", body: formCheck });
+    const availability = await checkRes.json();
+
+    // 該当サービスが満席なら送信拒否
+    if (availability[selected.service].status === "full") {
+        document.getElementById("loadingOverlay").style.display = "none";
+        btn.disabled = false;
+        btn.innerText = "Envoyer";
+
+        alert("Désolé, ce service est complet. Veuillez choisir un autre horaire.");
+        return;
+    }
+
+    // ② ここから通常予約処理
+    btn.innerText = "Envoi…";
 
     const payload = {
         date: selected.date,
@@ -217,11 +243,7 @@ document.getElementById("sendReservation").onclick = async () => {
     formData.append("json", JSON.stringify(payload));
 
     try {
-        const res = await fetch(apiUrl, {
-            method: "POST",
-            body: formData
-        });
-
+        const res = await fetch(apiUrl, { method: "POST", body: formData });
         const json = await res.json();
 
         document.getElementById("loadingOverlay").style.display = "none";
@@ -238,10 +260,8 @@ document.getElementById("sendReservation").onclick = async () => {
 
     } catch (err) {
         document.getElementById("loadingOverlay").style.display = "none";
-
         document.getElementById("finalMessage").innerText =
             "Erreur réseau. Veuillez réessayer.";
         showStep(5);
     }
 };
-
