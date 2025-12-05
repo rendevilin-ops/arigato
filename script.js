@@ -8,15 +8,8 @@ function showStep(n) {
 const selected = { date: null, service: null, time: null, pax: null };
 
 /* ===== API URL ===== */
-const apiUrl = 
+const apiUrl =
     "https://script.google.com/macros/s/AKfycbzZVkNb6IH05nD0EGHg6sxBPJT-7-q45COlm67tNt395hlvVKDD8v7DjwpovDo0e1JwHA/exec";
-
-/* ===== デバウンス関数 ===== */
-let checkTimer = null;
-function scheduleCapacityCheck() {
-    clearTimeout(checkTimer);
-    checkTimer = setTimeout(refreshServiceButtons, 300);
-}
 
 /* ========== Step1 初期化 ========== */
 function setToday() {
@@ -29,8 +22,8 @@ function setToday() {
 setToday();
 
 /* 日付変更ボタン */
-document.getElementById("prevDate").onclick = () => { changeDate(-1); scheduleCapacityCheck(); };
-document.getElementById("nextDate").onclick = () => { changeDate(1); scheduleCapacityCheck(); };
+document.getElementById("prevDate").onclick = () => { changeDate(-1); };
+document.getElementById("nextDate").onclick = () => { changeDate(1); };
 
 function changeDate(d) {
     const input = document.getElementById("resDate");
@@ -39,60 +32,11 @@ function changeDate(d) {
     input.value = c.toISOString().split("T")[0];
 }
 
-/* 日付 or 人数変更 */
-document.getElementById("resDate").addEventListener("change", scheduleCapacityCheck);
-document.getElementById("resPax").addEventListener("change", scheduleCapacityCheck);
-
-/* ========== サービス満席チェック (JSON 送信) ========== */
-async function refreshServiceButtons() {
-    const date = document.getElementById("resDate").value;
-    const pax = document.getElementById("resPax").value;
-
-    if (!date) return;
-
-    try {
-        const res = await fetch(apiUrl, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                mode: "serviceCheck",
-                date,
-                pax
-            })
-        });
-
-        const availability = await res.json();
-
-        document.querySelectorAll(".service-btn").forEach(btn => {
-            const service = btn.dataset.service;
-            const status = availability[service]?.status;
-
-            btn.textContent = service === "lunch" ? "Déjeuner" : "Dîner";
-
-            if (status === "full") {
-                btn.classList.add("full");
-                btn.textContent += " — Complet";
-                btn.disabled = true;
-            } else {
-                btn.classList.remove("full");
-                btn.disabled = false;
-            }
-        });
-
-    } catch (err) {
-        console.error("ServiceCheck error:", err);
-    }
-}
-
-/* 初回 */
-scheduleCapacityCheck();
-
 /* ========== Step1 — Service 選択 ========== */
 document.querySelectorAll(".service-btn").forEach(btn => {
     btn.addEventListener("click", () => {
-        if (btn.disabled) return;
-
         selected.service = btn.dataset.service;
+
         document.querySelectorAll(".service-btn").forEach(b => b.style.background = "");
         btn.style.background = "#ccc";
 
@@ -198,33 +142,9 @@ document.getElementById("sendReservation").onclick = async () => {
 
     const btn = document.getElementById("sendReservation");
     btn.disabled = true;
-    btn.textContent = "Vérification…";
+    btn.textContent = "Envoi…";
 
     document.getElementById("loadingOverlay").style.display = "flex";
-
-    /* 送信前チェック */
-    const checkRes = await fetch(apiUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            mode: "serviceCheck",
-            date: selected.date,
-            pax: selected.pax
-        })
-    });
-
-    const availability = await checkRes.json();
-
-    if (availability[selected.service].status === "full") {
-        document.getElementById("loadingOverlay").style.display = "none";
-        btn.disabled = false;
-        btn.textContent = "Envoyer";
-        alert("Désolé, ce service est complet. Veuillez choisir un autre horaire.");
-        return;
-    }
-
-    /* 正式送信 */
-    btn.textContent = "Envoi…";
 
     const payload = {
         date: selected.date,
@@ -237,7 +157,7 @@ document.getElementById("sendReservation").onclick = async () => {
         pax: selected.pax,
         kidsCount: selected.kids,
         celebration: selected.celebration,
-        vegCount: selected.veg || 0,
+        vegCount: selected.veg,
         comment: selected.comment,
         optin: document.getElementById("optin").checked
     };
@@ -252,24 +172,13 @@ document.getElementById("sendReservation").onclick = async () => {
         const json = await res.json();
 
         document.getElementById("loadingOverlay").style.display = "none";
-
-        if (json.ok === true) {
-            document.getElementById("finalMessage").innerText =
-                "Votre réservation a été envoyée. Merci beaucoup ! 🙏";
-        } else {
-            document.getElementById("finalMessage").innerText =
-                "Erreur : " + json.message;
-        }
+        document.getElementById("finalMessage").innerText = JSON.stringify(json);
 
         showStep(5);
 
     } catch (err) {
         document.getElementById("loadingOverlay").style.display = "none";
-        document.getElementById("finalMessage").innerText =
-            "Erreur réseau. Veuillez réessayer.";
+        document.getElementById("finalMessage").innerText = "Erreur réseau";
         showStep(5);
     }
 };
-
-
-
