@@ -7,17 +7,7 @@ function showStep(n) {
 /* データ保持 */
 const selected = { date: null, service: null, time: null, pax: null };
 
-const apiUrl =
-    "https://script.google.com/macros/s/AKfycby-Fi8vtXXNlSJr8aJBtcgd9xasWxwnRqgxwN3mUGM5FEP8btNRc7OO0tQVYFEbmjQxWQ/exec";
-
-/* ===== デバウンス関数（最優先で定義） ===== */
-let checkTimer = null;
-function scheduleCapacityCheck() {
-    clearTimeout(checkTimer);
-    checkTimer = setTimeout(refreshServiceButtons, 300);
-}
-
-/* ========== Step1 初期化 ========== */
+/* Step1 — 日付 */
 function setToday() {
     const t = new Date();
     const yyyy = t.getFullYear();
@@ -27,9 +17,8 @@ function setToday() {
 }
 setToday();
 
-/* 日付変更ボタン */
-document.getElementById("prevDate").onclick = () => { changeDate(-1); scheduleCapacityCheck(); };
-document.getElementById("nextDate").onclick = () => { changeDate(1); scheduleCapacityCheck(); };
+document.getElementById("prevDate").onclick = () => changeDate(-1);
+document.getElementById("nextDate").onclick = () => changeDate(1);
 
 function changeDate(d) {
     const input = document.getElementById("resDate");
@@ -38,62 +27,14 @@ function changeDate(d) {
     input.value = c.toISOString().split("T")[0];
 }
 
-/* 日付 or 人数変更 */
-document.getElementById("resDate").addEventListener("change", scheduleCapacityCheck);
-document.getElementById("resPax").addEventListener("change", scheduleCapacityCheck);
-
-/* ========== サービス満席チェック ========== */
-async function refreshServiceButtons() {
-    const date = document.getElementById("resDate").value;
-    const pax = document.getElementById("resPax").value;
-
-    if (!date) return;
-
-    const payload = { date, pax };
-    const formData = new FormData();
-    formData.append("json", JSON.stringify(payload));
-    formData.append("mode", "serviceCheck");
-
-    try {
-        const res = await fetch(apiUrl, { method: "POST", body: formData });
-        const availability = await res.json();
-
-        document.querySelectorAll(".service-btn").forEach(btn => {
-            const service = btn.dataset.service;
-            const status = availability[service]?.status;
-
-            // テキストは textContent にする（innerHTMLは禁止）
-            btn.textContent = service === "lunch" ? "Déjeuner" : "Dîner";
-
-            if (status === "full") {
-                btn.classList.add("full");
-                btn.textContent += " — Complet";
-                btn.disabled = true;
-            } else {
-                btn.classList.remove("full");
-                btn.disabled = false;
-            }
-        });
-
-    } catch (err) {
-        console.error("ServiceCheck error:", err);
-    }
-}
-
-/* 初回読み込み */
-scheduleCapacityCheck();
-
-/* ========== Step1 — Service & Time ========== */
+/* Step1 — Service & Time */
 document.querySelectorAll(".service-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-        if (btn.disabled) return;
-
+    btn.onclick = () => {
         selected.service = btn.dataset.service;
         document.querySelectorAll(".service-btn").forEach(b => b.style.background = "");
         btn.style.background = "#ccc";
-
         updateTimeButtons();
-    });
+    };
 });
 
 function updateTimeButtons() {
@@ -105,7 +46,6 @@ function updateTimeButtons() {
 
     const lunch = ["12:00", "12:30", "13:00", "13:30"];
     const dinner = ["20:00", "20:30", "21:00"];
-
     const times = selected.service === "lunch" ? lunch : dinner;
 
     times.forEach(t => {
@@ -121,7 +61,7 @@ function updateTimeButtons() {
     });
 }
 
-/* ========== Step1 → Step2 ========== */
+/* Next → Step2 */
 document.getElementById("toStep2").onclick = () => {
     selected.date = document.getElementById("resDate").value;
     selected.pax = document.getElementById("resPax").value;
@@ -137,7 +77,7 @@ document.getElementById("toStep2").onclick = () => {
     showStep(2);
 };
 
-/* ========= Step2 → Step3 ========== */
+/* Step2 → Step3 */
 document.getElementById("back1").onclick = () => showStep(1);
 
 document.getElementById("toStep3").onclick = () => {
@@ -157,7 +97,7 @@ document.getElementById("toStep3").onclick = () => {
     showStep(3);
 };
 
-/* ========= Step3 → Step4 ========== */
+/* Step3 → Step4 */
 document.getElementById("back2").onclick = () => showStep(2);
 
 document.getElementById("toStep4").onclick = () => {
@@ -187,41 +127,16 @@ document.getElementById("toStep4").onclick = () => {
     showStep(4);
 };
 
-/* ========= Step4 — 送信 ========== */
+/* Step4 — API送信 */
 document.getElementById("back3").onclick = () => showStep(3);
 
 document.getElementById("sendReservation").onclick = async () => {
 
     const btn = document.getElementById("sendReservation");
     btn.disabled = true;
-    btn.textContent = "Vérification…";
+    btn.innerText = "Envoi…";
 
     document.getElementById("loadingOverlay").style.display = "flex";
-
-    // 送信前チェック
-    const checkPayload = {
-        date: selected.date,
-        pax: selected.pax
-    };
-
-    const formCheck = new FormData();
-    formCheck.append("json", JSON.stringify(checkPayload));
-    formCheck.append("mode", "serviceCheck");
-
-    const checkRes = await fetch(apiUrl, { method: "POST", body: formCheck });
-    const availability = await checkRes.json();
-
-    if (availability[selected.service].status === "full") {
-        document.getElementById("loadingOverlay").style.display = "none";
-        btn.disabled = false;
-        btn.textContent = "Envoyer";
-
-        alert("Désolé, ce service est complet. Veuillez choisir un autre horaire.");
-        return;
-    }
-
-    // 送信
-    btn.textContent = "Envoi…";
 
     const payload = {
         date: selected.date,
@@ -239,11 +154,18 @@ document.getElementById("sendReservation").onclick = async () => {
         optin: document.getElementById("optin").checked
     };
 
+    const apiUrl =
+        "https://script.google.com/macros/s/AKfycby-Fi8vtXXNlSJr8aJBtcgd9xasWxwnRqgxwN3mUGM5FEP8btNRc7OO0tQVYFEbmjQxWQ/exec";
+
     const formData = new FormData();
     formData.append("json", JSON.stringify(payload));
 
     try {
-        const res = await fetch(apiUrl, { method: "POST", body: formData });
+        const res = await fetch(apiUrl, {
+            method: "POST",
+            body: formData
+        });
+
         const json = await res.json();
 
         document.getElementById("loadingOverlay").style.display = "none";
@@ -260,8 +182,12 @@ document.getElementById("sendReservation").onclick = async () => {
 
     } catch (err) {
         document.getElementById("loadingOverlay").style.display = "none";
+
         document.getElementById("finalMessage").innerText =
             "Erreur réseau. Veuillez réessayer.";
         showStep(5);
     }
 };
+
+
+
