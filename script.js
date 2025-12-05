@@ -188,3 +188,5 @@ document.getElementById("sendReservation").onclick = async () => {
         showStep(5);
     }
 };
+
+
