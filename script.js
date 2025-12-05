@@ -9,7 +9,7 @@ const selected = { date: null, service: null, time: null, pax: null };
 
 /* ===== API URL ===== */
 const apiUrl =
-    "https://script.google.com/macros/s/AKfycbz3wioBsfe80tlu5rBU4vSBE9J08K7z3LmFvVfYuvy38Lzfn_kUuaAPQW8G2954bpmqlA/exec";
+    "https://script.google.com/macros/s/AKfycbzZVkNb6IH05nD0EGHg6sxBPJT-7-q45COlm67tNt395hlvVKDD8v7DjwpovDo0e1JwHA/exec";
 
 /* ===== デバウンス関数 ===== */
 let checkTimer = null;
@@ -43,27 +43,32 @@ function changeDate(d) {
 document.getElementById("resDate").addEventListener("change", scheduleCapacityCheck);
 document.getElementById("resPax").addEventListener("change", scheduleCapacityCheck);
 
-/* ========== サービス満席チェック ========== */
+/* ========== サービス満席チェック（JSON版） ========== */
 async function refreshServiceButtons() {
     const date = document.getElementById("resDate").value;
     const pax = document.getElementById("resPax").value;
 
     if (!date) return;
 
-    const payload = { date, pax };
-    const formData = new FormData();
-    formData.append("json", JSON.stringify(payload));
-    formData.append("mode", "serviceCheck");
+    const payload = {
+        mode: "serviceCheck",
+        date,
+        pax
+    };
 
     try {
-        const res = await fetch(apiUrl, { method: "POST", body: formData });
+        const res = await fetch(apiUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
+
         const availability = await res.json();
 
         document.querySelectorAll(".service-btn").forEach(btn => {
             const service = btn.dataset.service;
             const status = availability[service]?.status;
 
-            // 安全にテキスト変更
             btn.textContent = service === "lunch" ? "Déjeuner" : "Dîner";
 
             if (status === "full") {
@@ -188,7 +193,7 @@ document.getElementById("toStep4").onclick = () => {
     showStep(4);
 };
 
-/* ========= Step4 — 送信 ========== */
+/* ========= Step4 — 送信(JSON POSTに変更) ========== */
 document.getElementById("back3").onclick = () => showStep(3);
 
 document.getElementById("sendReservation").onclick = async () => {
@@ -200,13 +205,18 @@ document.getElementById("sendReservation").onclick = async () => {
     document.getElementById("loadingOverlay").style.display = "flex";
 
     // 送信前チェック
-    const checkPayload = { date: selected.date, pax: selected.pax };
+    const checkPayload = {
+        mode: "serviceCheck",
+        date: selected.date,
+        pax: selected.pax
+    };
 
-    const formCheck = new FormData();
-    formCheck.append("json", JSON.stringify(checkPayload));
-    formCheck.append("mode", "serviceCheck");
+    const checkRes = await fetch(apiUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(checkPayload)
+    });
 
-    const checkRes = await fetch(apiUrl, { method: "POST", body: formCheck });
     const availability = await checkRes.json();
 
     if (availability[selected.service].status === "full") {
@@ -222,6 +232,7 @@ document.getElementById("sendReservation").onclick = async () => {
     btn.textContent = "Envoi…";
 
     const payload = {
+        mode: "submit",
         date: selected.date,
         service: selected.service,
         arrivalTime: selected.time,
@@ -237,21 +248,23 @@ document.getElementById("sendReservation").onclick = async () => {
         optin: document.getElementById("optin").checked
     };
 
-    const formData = new FormData();
-    formData.append("json", JSON.stringify(payload));
-
     try {
-        const res = await fetch(apiUrl, { method: "POST", body: formData });
+        const res = await fetch(apiUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
+
         const json = await res.json();
 
         document.getElementById("loadingOverlay").style.display = "none";
 
-        if (json.status === "ok") {
+        if (json.ok) {
             document.getElementById("finalMessage").innerText =
                 "Votre réservation a été envoyée. Merci beaucoup ! 🙏";
         } else {
             document.getElementById("finalMessage").innerText =
-                "Erreur : " + json.message;
+                "Erreur : " + json.error;
         }
 
         showStep(5);
@@ -263,6 +276,3 @@ document.getElementById("sendReservation").onclick = async () => {
         showStep(5);
     }
 };
-
-
-
