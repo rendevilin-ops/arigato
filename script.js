@@ -9,8 +9,7 @@ const selected = { date: null, service: null, time: null, pax: null };
 
 /* ===== API URL ===== */
 const apiUrl =
-    "https://script.google.com/macros/s/AKfycbzZVkNb6IH05nD0EGHg6sxBPJT-7-q45COlm67tNt395hlvVKDD8v7DjwpovDo0e1JwHA/exec";
-
+  
 /* ===== デバウンス関数 ===== */
 let checkTimer = null;
 function scheduleCapacityCheck() {
@@ -270,3 +269,4 @@ document.getElementById("sendReservation").onclick = async () => {
         showStep(5);
     }
 };
+
