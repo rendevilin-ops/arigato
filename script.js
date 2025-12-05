@@ -100,4 +100,91 @@ document.getElementById("toStep3").onclick = () => {
 /* Step3 → Step4 */
 document.getElementById("back2").onclick = () => showStep(2);
 
-document.getElementById("toS
+document.getElementById("toStep4").onclick = () => {
+    selected.kids = document.getElementById("kids").value;
+    selected.veg = document.getElementById("vegCount").value;
+    selected.celebration = document.getElementById("celebration").checked;
+    selected.comment = document.getElementById("comment").value.trim();
+
+    const html = `
+    <strong>📅 Date :</strong> ${selected.date}<br>
+    <strong>🕒 Heure :</strong> ${selected.time} (${selected.service})<br>
+    <strong>👥 Nombre :</strong> ${selected.pax}<br><br>
+
+    <strong>👤 Client :</strong><br>
+    ${document.getElementById("lastName").value} ${document.getElementById("firstName").value}<br>
+    📧 ${document.getElementById("email").value}<br>
+    📞 ${document.getElementById("phone").value}<br><br>
+
+    <strong>Remarques :</strong><br>
+    Enfants : ${selected.kids}<br>
+    Végétariens : ${selected.veg}<br>
+    Occasion spéciale : ${selected.celebration ? "Oui" : "Non"}<br>
+    Commentaire : ${selected.comment || "—"}
+  `;
+
+    document.getElementById("summaryAll").innerHTML = html;
+    showStep(4);
+};
+
+/* Step4 — API送信 */
+document.getElementById("back3").onclick = () => showStep(3);
+
+document.getElementById("sendReservation").onclick = async () => {
+
+    const btn = document.getElementById("sendReservation");
+    btn.disabled = true;
+    btn.innerText = "Envoi…";
+
+    document.getElementById("loadingOverlay").style.display = "flex";
+
+    const payload = {
+        date: selected.date,
+        service: selected.service,
+        arrivalTime: selected.time,
+        lastName: document.getElementById("lastName").value,
+        firstName: document.getElementById("firstName").value,
+        phone: document.getElementById("phone").value,
+        email: document.getElementById("email").value,
+        pax: selected.pax,
+        kidsCount: selected.kids,
+        celebration: selected.celebration,
+        vegCount: selected.veg || 0,
+        comment: selected.comment,
+        optin: document.getElementById("optin").checked
+    };
+
+    const apiUrl =
+        "https://script.google.com/macros/s/AKfycbxcRVcYFAZK80zPnw3ApIAuaJBvv15COMChTHlQTNgU6x9w0pVVopD7lzdonOc9SjQ/exec";
+
+    const formData = new FormData();
+    formData.append("json", JSON.stringify(payload));
+
+    try {
+        const res = await fetch(apiUrl, {
+            method: "POST",
+            body: formData
+        });
+
+        const json = await res.json();
+
+        document.getElementById("loadingOverlay").style.display = "none";
+
+        if (json.status === "ok") {
+            document.getElementById("finalMessage").innerText =
+                "Votre réservation a été envoyée. Merci beaucoup ! 🙏";
+        } else {
+            document.getElementById("finalMessage").innerText =
+                "Erreur : " + json.message;
+        }
+
+        showStep(5);
+
+    } catch (err) {
+        document.getElementById("loadingOverlay").style.display = "none";
+
+        document.getElementById("finalMessage").innerText =
+            "Erreur réseau. Veuillez réessayer.";
+        showStep(5);
+    }
+};
