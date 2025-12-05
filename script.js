@@ -21,8 +21,8 @@ function setToday() {
 setToday();
 
 /* 日付変更ボタン */
-document.getElementById("prevDate").onclick = () => { changeDate(-1); refreshServiceButtons(); };
-document.getElementById("nextDate").onclick = () => { changeDate(1); refreshServiceButtons(); };
+document.getElementById("prevDate").onclick = () => { changeDate(-1); scheduleCapacityCheck(); };
+document.getElementById("nextDate").onclick = () => { changeDate(1); scheduleCapacityCheck(); };
 
 function changeDate(d) {
     const input = document.getElementById("resDate");
@@ -31,9 +31,16 @@ function changeDate(d) {
     input.value = c.toISOString().split("T")[0];
 }
 
-/* 日付 or 人数変更でサービスチェック */
-document.getElementById("resDate").onchange = refreshServiceButtons;
-document.getElementById("resPax").onchange = refreshServiceButtons;
+/* 日付 or 人数変更 */
+document.getElementById("resDate").onchange = scheduleCapacityCheck;
+document.getElementById("resPax").onchange = scheduleCapacityCheck;
+
+/* ===== デバウンス (API 連続呼び出し防止) ===== */
+let checkTimer = null;
+function scheduleCapacityCheck() {
+    clearTimeout(checkTimer);
+    checkTimer = setTimeout(refreshServiceButtons, 300);
+}
 
 /* ========== サービス満席チェック ========== */
 async function refreshServiceButtons() {
@@ -55,14 +62,16 @@ async function refreshServiceButtons() {
             const service = btn.dataset.service;
             const status = availability[service]?.status;
 
+            // テキストを毎回リセット
+            btn.innerHTML = service === "lunch" ? "Déjeuner" : "Dîner";
+
             if (status === "full") {
                 btn.classList.add("full");
-                btn.innerHTML = `${btn.innerText} — Complet`;
+                btn.innerHTML += " — Complet";
                 btn.disabled = true;
             } else {
                 btn.classList.remove("full");
                 btn.disabled = false;
-                btn.innerText = service === "lunch" ? "Déjeuner" : "Dîner";
             }
         });
 
@@ -71,8 +80,8 @@ async function refreshServiceButtons() {
     }
 }
 
-/* 初期呼び出し */
-refreshServiceButtons();
+/* 初回読み込み時 */
+scheduleCapacityCheck();
 
 /* ========== Step1 — Service & Time ========== */
 document.querySelectorAll(".service-btn").forEach(btn => {
@@ -235,5 +244,3 @@ document.getElementById("sendReservation").onclick = async () => {
         showStep(5);
     }
 };
-
-
