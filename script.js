@@ -138,24 +138,39 @@ document.getElementById("sendReservation").onclick = async () => {
 
     document.getElementById("loadingOverlay").style.display = "flex";
 
+    // ★★★ 日付を100%安定フォーマットに成型する（最重要）★★★
+    let fixedDate = selected.date;
+
+    // 念のため「YYYY-MM-DD」以外の形なら強制変換
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(fixedDate)) {
+        const d = new Date(selected.date);
+        fixedDate = d.toISOString().split("T")[0];   // yyyy-mm-dd のみ取り出し
+    }
+
+    // ★ arrivalTime も安全のため String に強制
+    const fixedTime = String(selected.time);
+
+    // ★ payload 作成
     const payload = {
-        date: selected.date,
+        date: fixedDate,                    // ← 安定した yyyy-mm-dd の文字列
         service: selected.service,
-        arrivalTime: selected.time,
-        lastName: document.getElementById("lastName").value,
-        firstName: document.getElementById("firstName").value,
-        phone: document.getElementById("phone").value,
-        email: document.getElementById("email").value,
-        pax: selected.pax,
-        kidsCount: selected.kids,
-        celebration: selected.celebration,
-        vegCount: selected.veg || 0,
-        comment: selected.comment,
+        arrivalTime: fixedTime,             // ← "12:00" のような文字列
+        lastName: document.getElementById("lastName").value.trim(),
+        firstName: document.getElementById("firstName").value.trim(),
+        phone: document.getElementById("phone").value.trim(),
+        email: document.getElementById("email").value.trim(),
+        pax: Number(selected.pax),
+        kidsCount: Number(selected.kids),
+        celebration: Boolean(selected.celebration),
+        vegCount: Number(selected.veg || 0),
+        comment: selected.comment?.trim() || "",
         optin: document.getElementById("optin").checked
     };
 
+    console.log("PAYLOAD_SENT", payload); // ← デバッグ用
+
     const apiUrl =
-        "https://script.google.com/macros/s/AKfycbw153yZcGuC2C15nbPUR4iLu4qQAPo7sRqyL3E6UexFMhRkJXugzCnN1G7jbGGub7YGkA/exec";
+        "https://script.google.com/macros/s/AKfycbzGNqFiQPILKpvlO4VrKv6ulZ9o3U5aCV_XogMy7p-nCR0QN2bEaIOCRQLHZMDb5CCBmQ/exec";
 
     const formData = new FormData();
     formData.append("json", JSON.stringify(payload));
@@ -188,6 +203,8 @@ document.getElementById("sendReservation").onclick = async () => {
         showStep(5);
     }
 };
+
+
 
 
 
