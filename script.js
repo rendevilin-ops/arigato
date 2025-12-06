@@ -170,7 +170,7 @@ document.getElementById("sendReservation").onclick = async () => {
     console.log("PAYLOAD_SENT", payload); // ← デバッグ用
 
     const apiUrl =
-        "https://script.google.com/macros/s/AKfycbxrm2JxZnNWv83NC_UonaHnl6p6aeg15xpF4-u6gNcsIQlTrIvd-aYHhhsiX-73NF6okg/exec";
+        "https://script.google.com/macros/s/AKfycbxbEd0aMwJhEv0vfndo5diSulj64o2GgdKGdNGPRdH4YA1wPX5tIArinqAyReNjwDdGcA/exec";
 
     const formData = new FormData();
     formData.append("json", JSON.stringify(payload));
@@ -203,6 +203,7 @@ document.getElementById("sendReservation").onclick = async () => {
         showStep(5);
     }
 };
+
 
 
 
