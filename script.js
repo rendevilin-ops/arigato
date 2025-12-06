@@ -57,7 +57,7 @@ async function updateTimeButtons() {
 
     // === 残席数を取得する API ===
     const apiUrl =
-        "https://script.google.com/macros/s/AKfycbzGNqFiQPILKpvlO4VrKv6ulZ9o3U5aCV_XogMy7p-nCR0QN2bEaIOCRQLHZMDb5CCBmQ/exec"
+        "https://script.google.com/macros/s/AKfycbwgyn5OF7bmH1yAMNWZB0td8n3F1pcJ7cqN3mccptTY81-plpZEEyUJupeSP7QJiq5HEw/exec"
         + `?action=availability&date=${date}&service=${selected.service}`;
 
     let availableSeats = 0;
@@ -223,6 +223,7 @@ document.getElementById("sendReservation").onclick = async () => {
         showStep(5);
     }
 };
+
 
 
 
