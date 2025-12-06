@@ -155,7 +155,7 @@ document.getElementById("sendReservation").onclick = async () => {
     };
 
     const apiUrl =
-        "https://script.google.com/macros/s/AKfycbxeVxGQT3TQWLF4IdtCBXU0nq6nCm3Tuqfr039gOo2UadBs0PF7Zxqa4_HHWP5yhrXChA/exec";
+        "https://script.google.com/macros/s/AKfycbw153yZcGuC2C15nbPUR4iLu4qQAPo7sRqyL3E6UexFMhRkJXugzCnN1G7jbGGub7YGkA/exec";
 
     const formData = new FormData();
     formData.append("json", JSON.stringify(payload));
@@ -188,6 +188,7 @@ document.getElementById("sendReservation").onclick = async () => {
         showStep(5);
     }
 };
+
 
 
 
