@@ -37,8 +37,7 @@ document.querySelectorAll(".service-btn").forEach(btn => {
     };
 });
 
-/* ==== 残席チェック付き Time ボタン更新 ==== */
-async function updateTimeButtons() {
+function updateTimeButtons() {
     const box = document.getElementById("timeButtons");
     box.innerHTML = "";
     selected.time = null;
@@ -49,52 +48,18 @@ async function updateTimeButtons() {
     const dinner = ["20:00", "20:30", "21:00"];
     const times = selected.service === "lunch" ? lunch : dinner;
 
-    // pax（希望人数）
-    const pax = Number(document.getElementById("resPax").value || 1);
-
-    // Step1 の日付
-    const date = document.getElementById("resDate").value;
-
-    // === 残席数を取得する API ===
-    const apiUrl =
-        "https://script.google.com/macros/s/AKfycbwgyn5OF7bmH1yAMNWZB0td8n3F1pcJ7cqN3mccptTY81-plpZEEyUJupeSP7QJiq5HEw/exec"
-        + `?action=availability&date=${date}&service=${selected.service}`;
-
-    let availableSeats = 0;
-
-    try {
-        const res = await fetch(apiUrl);
-        const json = await res.json();
-        availableSeats = json.availableSeats || 0;
-        console.log("Available seats:", availableSeats);
-    } catch (e) {
-        console.warn("Seat availability fetch error:", e);
-    }
-
-    // === ボタン生成 ===
     times.forEach(t => {
         const b = document.createElement("button");
         b.textContent = t;
         b.style.margin = "5px";
-
-        // 残席 < 希望人数 → 満席
-        const isFull = availableSeats < pax;
-
-        if (isFull) {
-            b.classList.add("full");
-            b.disabled = true;
-        } else {
-            b.onclick = () => {
-                selected.time = t;
-                document.querySelectorAll("#timeButtons button").forEach(bb => bb.style.background = "");
-                b.style.background = "#ccc";
-            };
-        }
-
+        b.onclick = () => {
+            selected.time = t;
+            document.querySelectorAll("#timeButtons button").forEach(bb => bb.style.background = "");
+            b.style.background = "#ccc";
+        };
         box.appendChild(b);
     });
 }
-
 
 /* Next → Step2 */
 document.getElementById("toStep2").onclick = () => {
@@ -190,7 +155,7 @@ document.getElementById("sendReservation").onclick = async () => {
     };
 
     const apiUrl =
-        "https://script.google.com/macros/s/AKfycbwgyn5OF7bmH1yAMNWZB0td8n3F1pcJ7cqN3mccptTY81-plpZEEyUJupeSP7QJiq5HEw/exec";
+        "https://script.google.com/macros/s/AKfycbzGNqFiQPILKpvlO4VrKv6ulZ9o3U5aCV_XogMy7p-nCR0QN2bEaIOCRQLHZMDb5CCBmQ/exec";
 
     const formData = new FormData();
     formData.append("json", JSON.stringify(payload));
@@ -223,7 +188,4 @@ document.getElementById("sendReservation").onclick = async () => {
         showStep(5);
     }
 };
-
-
-
 
