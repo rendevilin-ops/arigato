@@ -5,28 +5,4 @@
     "Reserved": 10,
     "Availability": -3
   },
-  {
-    "Date": "2025-12-07",
-    "Service": "lunch",
-    "Reserved": 2,
-    "Availability": 5
-  },
-  {
-    "Date": "2025-12-08",
-    "Service": "dinner",
-    "Reserved": 3,
-    "Availability": 4
-  },
-  {
-    "Date": "2025-12-08",
-    "Service": "lunch",
-    "Reserved": 4,
-    "Availability": 3
-  },
-  {
-    "Date": "2025-12-28",
-    "Service": "dinner",
-    "Reserved": 1,
-    "Availability": 6
-  }
-]
+ ]
