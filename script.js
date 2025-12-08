@@ -20,7 +20,8 @@ async function updateServiceAvailability() {
         return;
     }
 
-    const url = "https://raw.githubusercontent.com/<USER>/<REPO>/main/availability.json";
+    const url = "https://raw.githubusercontent.com/rendevilin-ops/arigato
+/main/availability.json";
     console.log("Fetching:", url);
 
     let json;
@@ -308,6 +309,7 @@ document.getElementById("sendReservation").onclick = async () => {
         showStep(5);
     }
 };
+
 
 
 
