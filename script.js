@@ -21,11 +21,16 @@ async function updateServiceAvailability() {
     }
 
     const url = "https://raw.githubusercontent.com/rendevilin-ops/arigato/main/availability.json";
-    console.log("Fetching:", url);
 
     let json;
     try {
-        const res = await fetch(url);
+        console.log("Fetching:", url);
+
+        // ★ キャッシュ無効化して fetch（これだけでOK）
+        const res = await fetch(url + "?v=" + Date.now(), {
+            cache: "no-store"
+        });
+
         console.log("Fetch status:", res.status);
 
         const text = await res.text();
@@ -59,6 +64,7 @@ async function updateServiceAvailability() {
     updateStatus("lunch", lunch);
     updateStatus("dinner", dinner);
 }
+
 
 function updateStatus(service, data) {
     console.log(`Updating UI for ${service}`, data);
@@ -308,6 +314,7 @@ document.getElementById("sendReservation").onclick = async () => {
         showStep(5);
     }
 };
+
 
 
 
