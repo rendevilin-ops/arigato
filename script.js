@@ -18,7 +18,7 @@ async function updateServiceAvailability() {
     if (!date) return;
 
 
-    // Availability 取得先
+    /* Availability 取得先 */
     const url = "https://welcome-ray-31994.upstash.io/get/availability";
 
     let json;
@@ -49,7 +49,7 @@ async function updateServiceAvailability() {
     }
 
 
-    // Safety check
+    /* Safety check */
     if (!json || !json.availability) {
         console.error("JSON format unexpected. json.availability NOT found.");
         forceAvailable();
@@ -81,7 +81,7 @@ function updateStatus(service, data) {
         return;
     }
 
-    // ★ 予約データがない日 → Availability = 7 と表示
+    /* ★ 予約データがない日 → Availability = 7 と表示 */
     if (!data) {
         const defaultSeats = 7;
         statusEl.textContent = `Disponible (${defaultSeats} places)`;
@@ -157,7 +157,35 @@ function changeDate(d) {
     updateServiceAvailability();
 }
 
+/* 人数プルダウンの制限 */
+function updatePaxLimit(seats) {
+    const paxSelect = document.getElementById("resPax");
 
+    // 一旦全部消して作り直す
+    paxSelect.innerHTML = "";
+
+    // seats が null や undefined の場合は 7 固定で作る
+    const max = seats > 0 ? seats : 0;
+
+    if (max === 0) {
+        // 空席が 0 の場合は選択不可 (option にメッセージだけ表示)
+        const opt = document.createElement("option");
+        opt.textContent = "0 (complet)";
+        opt.value = 0;
+        paxSelect.appendChild(opt);
+        paxSelect.disabled = true;
+        return;
+    }
+
+    paxSelect.disabled = false;
+
+    for (let i = 1; i <= max; i++) {
+        const opt = document.createElement("option");
+        opt.value = i;
+        opt.textContent = i;
+        paxSelect.appendChild(opt);
+    }
+}
 
 /* Step1 — Service & Time */
 document.querySelectorAll(".service-btn").forEach(btn => {
@@ -335,6 +363,7 @@ document.getElementById("sendReservation").onclick = async () => {
         showStep(5);
     }
 };
+
 
 
 
