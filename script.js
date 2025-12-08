@@ -175,13 +175,20 @@ document.getElementById("nextDate").onclick = () => changeDate(1);
 
 function changeDate(d) {
     const input = document.getElementById("resDate");
-    const c = new Date(input.value);
-    c.setDate(c.getDate() + d);
-    input.value = c.toISOString().split("T")[0];
+    const current = new Date(input.value);
 
-    // ★★★ 追加：日付変更後に availability 再チェック ★★★
+    current.setDate(current.getDate() + d);
+
+    const today = new Date();
+    today.setHours(0,0,0,0);
+
+    // 過去には戻らせない
+    if (current < today) return;
+
+    input.value = current.toISOString().split("T")[0];
     updateServiceAvailability();
 }
+
 
 
 /* Step1 — Service & Time */
@@ -360,6 +367,7 @@ document.getElementById("sendReservation").onclick = async () => {
         showStep(5);
     }
 };
+
 
 
 
