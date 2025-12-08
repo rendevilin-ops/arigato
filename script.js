@@ -77,8 +77,10 @@ function updateStatus(service, data) {
         return;
     }
 
+    // ★ 予約データがない日 → Availability = 7 と表示
     if (!data) {
-        statusEl.textContent = "Disponible (? places)";
+        const defaultSeats = 7;
+        statusEl.textContent = `Disponible (${defaultSeats} places)`;
         btn.disabled = false;
         btn.classList.remove("disabled");
         return;
@@ -318,6 +320,7 @@ document.getElementById("sendReservation").onclick = async () => {
         showStep(5);
     }
 };
+
 
 
 
