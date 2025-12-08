@@ -136,7 +136,11 @@ function changeDate(d) {
     const c = new Date(input.value);
     c.setDate(c.getDate() + d);
     input.value = c.toISOString().split("T")[0];
+
+    // ★★★ 追加：日付変更後に availability 再チェック ★★★
+    updateServiceAvailability();
 }
+
 
 /* Step1 — Service & Time */
 document.querySelectorAll(".service-btn").forEach(btn => {
@@ -314,6 +318,7 @@ document.getElementById("sendReservation").onclick = async () => {
         showStep(5);
     }
 };
+
 
 
 
