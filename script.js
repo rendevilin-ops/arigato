@@ -105,6 +105,11 @@ function forceAvailable() {
     });
 }
 
+document.addEventListener("DOMContentLoaded", () => {
+    updateServiceAvailability();
+});
+
+document.getElementById("resDate").addEventListener("change", updateServiceAvailability);
 
 
 /* Step1 — 日付 */
@@ -303,6 +308,7 @@ document.getElementById("sendReservation").onclick = async () => {
         showStep(5);
     }
 };
+
 
 
 
