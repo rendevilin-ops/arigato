@@ -43,8 +43,15 @@
         <!-- Service -->
         <label>Service</label>
         <div id="serviceButtons">
-            <button type="button" class="service-btn" data-service="lunch">Déjeuner</button>
-            <button type="button" class="service-btn" data-service="dinner">Dîner</button>
+            <button type="button" class="service-btn" data-service="lunch">
+                <span class="service-title">Déjeuner</span><br>
+                <span class="service-status" id="status-lunch">Vérification...</span>
+            </button>
+        
+            <button type="button" class="service-btn" data-service="dinner">
+                <span class="service-title">Dîner</span><br>
+                <span class="service-status" id="status-dinner">Vérification...</span>
+            </button>
         </div><br><br>
 
         <!-- Time -->
@@ -164,3 +171,4 @@
 
 
 </html>
+
