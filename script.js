@@ -133,6 +133,17 @@ function setToday() {
 
     dateInput.value = today;  // 初期値
     dateInput.min = today;    // ← 過去日をカレンダーで選べなくする
+    
+    // ★ 14日後の max を設定
+    const future = new Date();
+    future.setDate(future.getDate() + 14); // 14日後
+
+    const yyyy2 = future.getFullYear();
+    const mm2 = String(future.getMonth() + 1).padStart(2, "0");
+    const dd2 = String(future.getDate()).padStart(2, "0");
+    const maxDate = `${yyyy2}-${mm2}-${dd2}`;
+
+    dateInput.max = maxDate; // ← ここで2週間制限！
 }
 setToday();
 
@@ -150,6 +161,9 @@ function changeDate(d) {
 
     // 過去には戻らせない
     if (current < today) return;
+    // 最大値チェック（14日後まで）
+    const max = new Date(input.max);
+    if (current > max) return;
 
     input.value = current.toISOString().split("T")[0];
     updateServiceAvailability();
@@ -386,6 +400,7 @@ document.getElementById("sendReservation").onclick = async () => {
         showStep(5);
     }
 };
+
 
 
 
