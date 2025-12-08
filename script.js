@@ -17,33 +17,39 @@ async function updateServiceAvailability() {
 
     if (!date) return;
 
-    const url = "https://api.github.com/repos/rendevilin-ops/arigato/contents/availability.json";
+
+    // ★ ここだけ GitHub → Upstash に置き換え
+    const url = "https://welcome-ray-31994.upstash.io/get/availability";
 
     let json;
     try {
-        console.log("Fetching:", url);
+        console.log("Fetching Upstash:", url);
 
-        const res = await fetch(url + "?v=" + Date.now(), {
+        const res = await fetch(url, {
+            headers: {
+                "Authorization": "Bearer YOUR_READ_ONLY_TOKEN"
+            },
             cache: "no-store"
         });
 
         console.log("Fetch status:", res.status);
 
         const apiData = await res.json();
-        console.log("GitHub API raw:", apiData);
+        console.log("Upstash raw:", apiData);
 
-        // GitHub API の content は Base64 なので decode 必須
-        const decoded = atob(apiData.content);
-        json = JSON.parse(decoded);
+        // Upstash は { result: "JSONString" }
+        json = JSON.parse(apiData.result);
 
-        console.log("Decoded JSON:", json);
+        console.log("Parsed JSON:", json);
 
     } catch (e) {
-        console.error("ERROR loading JSON:", e);
+        console.error("ERROR loading JSON from Upstash:", e);
         forceAvailable();
         return;
     }
 
+
+    // Safety check
     if (!json || !json.availability) {
         console.error("JSON format unexpected. json.availability NOT found.");
         forceAvailable();
@@ -52,6 +58,7 @@ async function updateServiceAvailability() {
 
     const list = json.availability;
     console.log("Availability list:", list);
+
 
     const lunch = list.find(a => a.Date === date && a.Service === "lunch");
     const dinner = list.find(a => a.Date === date && a.Service === "dinner");
@@ -62,7 +69,6 @@ async function updateServiceAvailability() {
     updateStatus("lunch", lunch);
     updateStatus("dinner", dinner);
 }
-
 
 function updateStatus(service, data) {
     console.log(`Updating UI for ${service}`, data);
@@ -318,6 +324,7 @@ document.getElementById("sendReservation").onclick = async () => {
         showStep(5);
     }
 };
+
 
 
 
