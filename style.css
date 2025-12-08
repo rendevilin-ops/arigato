@@ -104,9 +104,21 @@ textarea {
 
 }
 
-.service-btn.full {
-    background: #444 !important;
-    color: #bbb !important;
-    text-decoration: line-through;
+.service-btn {
+    padding: 15px;
+    border-radius: 10px;
+    width: 140px;
+    border: 1px solid #ccc;
+}
+
+.service-status {
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+.service-btn.disabled {
+    opacity: 0.4;
+    background: #ddd;
     cursor: not-allowed;
 }
+
