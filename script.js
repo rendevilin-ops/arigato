@@ -1,6 +1,26 @@
 /* ページ切り替え */
 function showStep(n) {
-    document.querySelectorAll(".step").forEach(s => s.classList.remove("active"));
+    document.querySelectorAll(".service-btn").forEach(btn => {
+        btn.onclick = () => {
+    
+            selected.service = btn.dataset.service;
+    
+            document.querySelectorAll(".service-btn").forEach(b => b.style.background = "");
+            btn.style.background = "#ccc";
+    
+            updateTimeButtons();
+    
+            // ★ ここが重要：常に最新 availability を参照
+            const data =
+                selected.service === "lunch"
+                    ? window.currentLunchData
+                    : window.currentDinnerData;
+    
+            const seats = data ? Number(data.Availability) : 7;
+            updatePaxLimit(seats);
+        };
+    });
+
     document.getElementById("step" + n).classList.add("active");
 }
 
@@ -76,41 +96,30 @@ function updateStatus(service, data) {
     const statusEl = document.getElementById(`status-${service}`);
     const btn = document.querySelector(`button[data-service="${service}"]`);
 
-    if (!statusEl || !btn) {
-        console.error("HTML missing:", service);
-        return;
-    }
+    if (!statusEl || !btn) return;
 
-    // 保存：現在のデータをグローバルに持っておく（人数制限で使う）
-    if (service === "lunch") window.currentLunchData = data;
-    if (service === "dinner") window.currentDinnerData = data;
+    // グローバルに保存する（必ず毎回セットされる）
+    if (service === "lunch") window.currentLunchData = data || { Availability: 7 };
+    if (service === "dinner") window.currentDinnerData = data || { Availability: 7 };
 
-    /* データがない日 → Availability = 7 */
-    if (!data) {
-        statusEl.textContent = "Disponible (7 places)";
-        btn.disabled = false;
-        btn.classList.remove("disabled");
-
-        if (selected.service === service) updatePaxLimit(7);
-        return;
-    }
-
-    const seats = Number(data.Availability);
+    const seats = data ? Number(data.Availability) : 7;
 
     if (seats > 0) {
         statusEl.textContent = `Disponible (${seats} places)`;
         btn.disabled = false;
         btn.classList.remove("disabled");
-
-        if (selected.service === service) updatePaxLimit(seats);
     } else {
         statusEl.textContent = "Indisponible";
         btn.disabled = true;
         btn.classList.add("disabled");
+    }
 
-        if (selected.service === service) updatePaxLimit(0);
+    // 現在選択中の service に対して人数制限を即反映
+    if (selected.service === service) {
+        updatePaxLimit(seats);
     }
 }
+
 
 function forceAvailable() {
     console.warn("Fallback: marking all available");
@@ -383,6 +392,7 @@ document.getElementById("sendReservation").onclick = async () => {
         showStep(5);
     }
 };
+
 
 
 
