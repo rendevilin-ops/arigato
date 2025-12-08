@@ -18,7 +18,7 @@ async function updateServiceAvailability() {
     if (!date) return;
 
 
-    // ★ ここだけ GitHub → Upstash に置き換え
+    // Availability 取得先
     const url = "https://welcome-ray-31994.upstash.io/get/availability";
 
     let json;
@@ -122,6 +122,42 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 document.getElementById("resDate").addEventListener("change", updateServiceAvailability);
+
+// 日付のmin
+function setToday() {
+    const t = new Date();
+    const yyyy = t.getFullYear();
+    const mm = String(t.getMonth() + 1).padStart(2, "0");
+    const dd = String(t.getDate()).padStart(2, "0");
+    const today = `${yyyy}-${mm}-${dd}`;
+
+    const dateInput = document.getElementById("resDate");
+
+    // 今日に設定
+    dateInput.value = today;
+
+    // 今日以前は選べないようにする
+    dateInput.min = today;
+}
+setToday();
+
+function changeDate(d) {
+    const input = document.getElementById("resDate");
+    const current = new Date(input.value);
+
+    current.setDate(current.getDate() + d);
+
+    const today = new Date();
+    today.setHours(0,0,0,0); // 深夜0時で固定
+
+    // 過去日付へは移動させない
+    if (current < today) {
+        return; 
+    }
+
+    input.value = current.toISOString().split("T")[0];
+    updateServiceAvailability();
+}
 
 
 /* Step1 — 日付 */
@@ -324,6 +360,7 @@ document.getElementById("sendReservation").onclick = async () => {
         showStep(5);
     }
 };
+
 
 
 
