@@ -15,29 +15,28 @@ async function updateServiceAvailability() {
     const date = document.getElementById("resDate").value;
     console.log("Selected date:", date);
 
-    if (!date) {
-        console.warn("No date selected");
-        return;
-    }
+    if (!date) return;
 
-    const url = "https://raw.githubusercontent.com/rendevilin-ops/arigato/main/availability.json";
+    const url = "https://api.github.com/repos/rendevilin-ops/arigato/contents/availability.json";
 
     let json;
     try {
         console.log("Fetching:", url);
 
-        // ★ キャッシュ無効化して fetch（これだけでOK）
         const res = await fetch(url + "?v=" + Date.now(), {
             cache: "no-store"
         });
 
         console.log("Fetch status:", res.status);
 
-        const text = await res.text();
-        console.log("Raw response text:", text);
+        const apiData = await res.json();
+        console.log("GitHub API raw:", apiData);
 
-        json = JSON.parse(text);
-        console.log("Parsed JSON:", json);
+        // GitHub API の content は Base64 なので decode 必須
+        const decoded = atob(apiData.content);
+        json = JSON.parse(decoded);
+
+        console.log("Decoded JSON:", json);
 
     } catch (e) {
         console.error("ERROR loading JSON:", e);
@@ -45,7 +44,6 @@ async function updateServiceAvailability() {
         return;
     }
 
-    // Safety check
     if (!json || !json.availability) {
         console.error("JSON format unexpected. json.availability NOT found.");
         forceAvailable();
@@ -320,6 +318,7 @@ document.getElementById("sendReservation").onclick = async () => {
         showStep(5);
     }
 };
+
 
 
 
