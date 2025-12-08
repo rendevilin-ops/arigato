@@ -81,6 +81,37 @@ function updateStatus(service, data) {
         return;
     }
 
+    if (!data) {
+        statusEl.textContent = "Disponible (7 places)";
+        btn.disabled = false;
+        btn.classList.remove("disabled");
+
+        // デフォルトで人数は 1〜7
+        if (selected.service === service) updatePaxLimit(7);
+
+        return;
+    }
+
+    const seats = Number(data.Availability);
+
+    if (seats > 0) {
+        statusEl.textContent = `Disponible (${seats} places)`;
+        btn.disabled = false;
+        btn.classList.remove("disabled");
+
+        // 選択中のサービスだったら人数制限を更新
+        if (selected.service === service) updatePaxLimit(seats);
+
+    } else {
+        statusEl.textContent = "Indisponible";
+        btn.disabled = true;
+        btn.classList.add("disabled");
+
+        if (selected.service === service) updatePaxLimit(0);
+    }
+}
+
+
     /* ★ 予約データがない日 → Availability = 7 と表示 */
     if (!data) {
         const defaultSeats = 7;
@@ -193,8 +224,19 @@ document.querySelectorAll(".service-btn").forEach(btn => {
         selected.service = btn.dataset.service;
         document.querySelectorAll(".service-btn").forEach(b => b.style.background = "");
         btn.style.background = "#ccc";
+        
         updateTimeButtons();
+    
+        // サービス選択後、Availability に応じて人数制限も更新
+        const statusData = (btn.dataset.service === "lunch")
+            ? currentLunchData
+            : currentDinnerData;
+    
+        if (statusData) {
+            updatePaxLimit(Number(statusData.Availability));
+        }
     };
+
 });
 
 function updateTimeButtons() {
@@ -363,6 +405,7 @@ document.getElementById("sendReservation").onclick = async () => {
         showStep(5);
     }
 };
+
 
 
 
