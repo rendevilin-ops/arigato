@@ -1,26 +1,6 @@
 /* ページ切り替え */
 function showStep(n) {
-    document.querySelectorAll(".service-btn").forEach(btn => {
-        btn.onclick = () => {
-    
-            selected.service = btn.dataset.service;
-    
-            document.querySelectorAll(".service-btn").forEach(b => b.style.background = "");
-            btn.style.background = "#ccc";
-    
-            updateTimeButtons();
-    
-            // ★ ここが重要：常に最新 availability を参照
-            const data =
-                selected.service === "lunch"
-                    ? window.currentLunchData
-                    : window.currentDinnerData;
-    
-            const seats = data ? Number(data.Availability) : 7;
-            updatePaxLimit(seats);
-        };
-    });
-
+    document.querySelectorAll(".step").forEach(s => s.classList.remove("active"));
     document.getElementById("step" + n).classList.add("active");
 }
 
@@ -392,6 +372,7 @@ document.getElementById("sendReservation").onclick = async () => {
         showStep(5);
     }
 };
+
 
 
 
