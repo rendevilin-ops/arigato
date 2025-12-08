@@ -10,43 +10,64 @@ const selected = { date: null, service: null, time: null, pax: null };
 /* availability.json を読み込み */
 async function updateServiceAvailability() {
     const date = document.getElementById("resDate").value;
-    if (!date) return; // 日付未選択なら何もしない
+    if (!date) return;
 
     const url = "https://raw.githubusercontent.com/<USER>/<REPO>/main/availability.json";
-    const json = await fetch(url).then(r => r.json());
 
-    const lunch = json.availability.find(a => a.Date === date && a.Service === "lunch");
-    const dinner = json.availability.find(a => a.Date === date && a.Service === "dinner");
-
-    // HTML 要素
-    const lunchStatus = document.getElementById("status-lunch");
-    const dinnerStatus = document.getElementById("status-dinner");
-
-    const lunchBtn = document.querySelector('button[data-service="lunch"]');
-    const dinnerBtn = document.querySelector('button[data-service="dinner"]');
-
-    // Déjeuner
-    if (!lunch || lunch.Availability > 0) {
-        lunchStatus.textContent = `Disponible (${lunch ? lunch.Availability : "?"} places)`;
-        lunchBtn.disabled = false;
-        lunchBtn.classList.remove("disabled");
-    } else {
-        lunchStatus.textContent = "Indisponible";
-        lunchBtn.disabled = true;
-        lunchBtn.classList.add("disabled");
+    let json;
+    try {
+        json = await fetch(url).then(r => r.json());
+    } catch (e) {
+        console.error("Failed to load availability.json", e);
+        // 読めない場合は全部 Disponible
+        forceAvailable();
+        return;
     }
 
-    // Dîner
-    if (!dinner || dinner.Availability > 0) {
-        dinnerStatus.textContent = `Disponible (${dinner ? dinner.Availability : "?"} places)`;
-        dinnerBtn.disabled = false;
-        dinnerBtn.classList.remove("disabled");
+    const availability = json.availability || [];
+
+    const lunch = availability.find(a => a.Date === date && a.Service === "lunch");
+    const dinner = availability.find(a => a.Date === date && a.Service === "dinner");
+
+    updateStatus("lunch", lunch);
+    updateStatus("dinner", dinner);
+}
+
+function updateStatus(service, data) {
+    const statusEl = document.getElementById(`status-${service}`);
+    const btn = document.querySelector(`button[data-service="${service}"]`);
+
+    // data が無い → Disponible（席数不明なので「?」）
+    if (!data) {
+        statusEl.textContent = "Disponible (? places)";
+        btn.disabled = false;
+        btn.classList.remove("disabled");
+        return;
+    }
+
+    // Availability > 0 → Disponible
+    if (Number(data.Availability) > 0) {
+        statusEl.textContent = `Disponible (${data.Availability} places)`;
+        btn.disabled = false;
+        btn.classList.remove("disabled");
     } else {
-        dinnerStatus.textContent = "Indisponible";
-        dinnerBtn.disabled = true;
-        dinnerBtn.classList.add("disabled");
+        // Availability = 0 → Indisponible
+        statusEl.textContent = "Indisponible";
+        btn.disabled = true;
+        btn.classList.add("disabled");
     }
 }
+
+// JSONが読み込めない・全体的に不明な場合の fallback
+function forceAvailable() {
+    ["lunch", "dinner"].forEach(service => {
+        document.getElementById(`status-${service}`).textContent = "Disponible (? places)";
+        const btn = document.querySelector(`button[data-service="${service}"]`);
+        btn.disabled = false;
+        btn.classList.remove("disabled");
+    });
+}
+
 
 /* Step1 — 日付 */
 function setToday() {
@@ -244,6 +265,7 @@ document.getElementById("sendReservation").onclick = async () => {
         showStep(5);
     }
 };
+
 
 
 
