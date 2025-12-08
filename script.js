@@ -350,17 +350,31 @@ document.getElementById("sendReservation").onclick = async () => {
             body: formData
         });
 
-        const json = await res.json();
+    const json = await res.json();
+    
+    document.getElementById("loadingOverlay").style.display = "none";
+    
+    // ★ n8n のデフォルト応答 "Workflow was started" をキャッチ
+    if (json.message === "Workflow was started") {
+        document.getElementById("finalMessage").innerText =
+            "Votre réservation a bien été envoyée.\n" +
+            "Nous traitons votre demande.\n" +
+            "Merci de vérifier votre e-mail de confirmation.";
+        showStep(5);
+        return;
+    }
+    
+    // ★ 普通の成功レスポンス
+    if (json.status === "ok") {
+        document.getElementById("finalMessage").innerText =
+            "Votre réservation a été envoyée. Merci beaucoup ! 🙏";
+    } else {
+        document.getElementById("finalMessage").innerText =
+            "Erreur : " + (json.message || "Une erreur est survenue.");
+    }
+    
+    showStep(5);
 
-        document.getElementById("loadingOverlay").style.display = "none";
-
-        if (json.status === "ok") {
-            document.getElementById("finalMessage").innerText =
-                "Votre réservation a été envoyée. Merci beaucoup ! 🙏";
-        } else {
-            document.getElementById("finalMessage").innerText =
-                "Erreur : " + json.message;
-        }
 
         showStep(5);
 
@@ -372,6 +386,7 @@ document.getElementById("sendReservation").onclick = async () => {
         showStep(5);
     }
 };
+
 
 
 
