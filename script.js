@@ -27,7 +27,7 @@ async function updateServiceAvailability() {
 
         const res = await fetch(url, {
             headers: {
-                "Authorization": "Bearer YOUR_READ_ONLY_TOKEN"
+                "Authorization": "Bearer AXz6AAIncDI4ZDc5YjAxYTg3NTA0NjI0OTk2ZWNiOTRlNGI1NTE2OXAyMzE5OTQ"
             },
             cache: "no-store"
         });
@@ -324,6 +324,7 @@ document.getElementById("sendReservation").onclick = async () => {
         showStep(5);
     }
 };
+
 
 
 
