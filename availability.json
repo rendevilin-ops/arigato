@@ -51,8 +51,8 @@
     {
       "Date": "2025-12-11",
       "Service": "dinner",
-      "Reserved": "2",
-      "Availability": "5"
+      "Reserved": "9",
+      "Availability": "-2"
     },
     {
       "Date": "2025-12-11",
