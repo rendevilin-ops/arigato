@@ -63,8 +63,8 @@
     {
       "Date": "2025-12-10",
       "Service": "lunch",
-      "Reserved": "7",
-      "Availability": "0"
+      "Reserved": "8",
+      "Availability": "-1"
     },
     {
       "Date": "2025-12-10",
