@@ -353,7 +353,7 @@ document.getElementById("sendReservation").onclick = async () => {
     console.log("PAYLOAD_SENT", payload); // ← デバッグ用
 
     const apiUrl =
-        "https://n8n-sab.onrender.com/webhook/arigato-reservation";
+        "https://n8n-sab.onrender.com/webhook-test/arigato-reservation";
 
     const formData = new FormData();
     formData.append("json", JSON.stringify(payload));
@@ -400,46 +400,3 @@ document.getElementById("sendReservation").onclick = async () => {
         showStep(5);
     }
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
