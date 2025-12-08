@@ -123,7 +123,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 document.getElementById("resDate").addEventListener("change", updateServiceAvailability);
 
-// 日付のmin
+/* Step1 — 日付 */
 function setToday() {
     const t = new Date();
     const yyyy = t.getFullYear();
@@ -133,40 +133,8 @@ function setToday() {
 
     const dateInput = document.getElementById("resDate");
 
-    // 今日に設定
-    dateInput.value = today;
-
-    // 今日以前は選べないようにする
-    dateInput.min = today;
-}
-setToday();
-
-function changeDate(d) {
-    const input = document.getElementById("resDate");
-    const current = new Date(input.value);
-
-    current.setDate(current.getDate() + d);
-
-    const today = new Date();
-    today.setHours(0,0,0,0); // 深夜0時で固定
-
-    // 過去日付へは移動させない
-    if (current < today) {
-        return; 
-    }
-
-    input.value = current.toISOString().split("T")[0];
-    updateServiceAvailability();
-}
-
-
-/* Step1 — 日付 */
-function setToday() {
-    const t = new Date();
-    const yyyy = t.getFullYear();
-    const mm = String(t.getMonth() + 1).padStart(2, "0");
-    const dd = String(t.getDate()).padStart(2, "0");
-    document.getElementById("resDate").value = `${yyyy}-${mm}-${dd}`;
+    dateInput.value = today;  // 初期値
+    dateInput.min = today;    // ← 過去日をカレンダーで選べなくする
 }
 setToday();
 
@@ -367,6 +335,7 @@ document.getElementById("sendReservation").onclick = async () => {
         showStep(5);
     }
 };
+
 
 
 
