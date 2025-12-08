@@ -3,8 +3,8 @@
     {
       "Date": "2025-12-07",
       "Service": "dinner",
-      "Reserved": 10,
-      "Availability": -3
+      "Reserved": 1,
+      "Availability": 6
     },
     {
       "Date": "2025-12-07",
@@ -15,14 +15,14 @@
     {
       "Date": "2025-12-08",
       "Service": "dinner",
-      "Reserved": 3,
-      "Availability": 4
+      "Reserved": 1,
+      "Availability": 6
     },
     {
       "Date": "2025-12-08",
       "Service": "lunch",
-      "Reserved": 4,
-      "Availability": 3
+      "Reserved": 1,
+      "Availability": 6
     },
     {
       "Date": "2025-12-28",
@@ -33,14 +33,14 @@
     {
       "Date": "2025-12-14",
       "Service": "dinner",
-      "Reserved": 3,
-      "Availability": 4
+      "Reserved": 1,
+      "Availability": 6
     },
     {
       "Date": "2025-12-15",
       "Service": "lunch",
-      "Reserved": 2,
-      "Availability": 5
+      "Reserved": 1,
+      "Availability": 6
     },
     {
       "Date": "2025-12-17",
