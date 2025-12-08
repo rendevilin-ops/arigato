@@ -91,6 +91,12 @@
       "Availability": "6"
     },
     {
+      "Date": "2025-12-12",
+      "Service": "dinner",
+      "Reserved": "7",
+      "Availability": "0"
+    },
+    {
       "Date": "2025-12-13",
       "Service": "dinner",
       "Reserved": "1",
