@@ -53,6 +53,12 @@
       "Service": "dinner",
       "Reserved": "1",
       "Availability": "6"
+    },
+    {
+      "Date": "2025-12-10",
+      "Service": "lunch",
+      "Reserved": "7",
+      "Availability": "0"
     }
   ]
 }
