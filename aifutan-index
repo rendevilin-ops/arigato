@@ -20,7 +20,7 @@
 
         <h3>1. Choisissez la date, le service et le nombre de personnes</h3>
 
-        <!-- Date -->
+        <!-- Datee -->
         <label>Date</label>
         <div style="display:flex; gap:10px; align-items:center;">
             <button type="button" id="prevDate">←</button>
