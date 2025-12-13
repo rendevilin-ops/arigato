@@ -21,7 +21,7 @@ body {
     margin: auto;
     padding: 20px;
 
-    background: #FFF6F0;       /* 柔らかいベージュ */
+    background: #FFFFFF;       /* 柔らかいベージュ */
     color: #2A1A14;            /* 読みやすい濃いブラウン */
 }
 
@@ -132,10 +132,12 @@ button:hover {
 }
 
 /* 選択状態 */
-#timeButtons button.selected {
-    background: #F7685C;
-    color: white;
+.service-btn.selected,
+.time-btn.selected {
+    background: #22150F !important;
+    color: white !important;
 }
+
 
 /* ========== LOADING OVERLAY ========== */
 #loadingOverlay {
@@ -171,5 +173,6 @@ button:hover {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
 
 
