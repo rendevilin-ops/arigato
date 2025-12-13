@@ -97,15 +97,26 @@ button:hover {
 }
 
 /* ========== SERVICE BUTTONS ========== */
+#serviceButtons {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+}
+
 .service-btn {
+    flex: 1;                     /* ← 幅を均等配分 */
     padding: 15px;
     border-radius: 10px;
-    width: 140px;
     border: 1px solid #C7BAB4;
     background: #FFFFFF;
     color: #E57373;
+    text-align: center;
     transition: 0.2s;
-    width: 50%;
+}
+
+/* gap 分だけの補正（重要） */
+.service-btn:not(:last-child) {
+    margin-right: 12px;          /* gap と同じ値 */
 }
 .service-btn:hover {
     background: #FFEDE2;      /* 軽いサーモン */
@@ -261,6 +272,7 @@ input[type="checkbox"] {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
 
 
 
