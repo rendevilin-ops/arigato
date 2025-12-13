@@ -70,23 +70,28 @@ async function updateServiceAvailability() {
     updateStatus("dinner", dinner);
 }
 
-function updateStatus(service, data) {
-    console.log(`Updating UI for ${service}`, data);
+// ★ 全時間帯が締切かどうかを判定する関数
+function isAllTimesClosed(dateStr, service) {
+    const lunchTimes = ["12:00", "12:30", "13:00"];
+    const dinnerTimes = ["20:00", "20:30", "21:00"];
+    const times = service === "lunch" ? lunchTimes : dinnerTimes;
 
+    return times.every(t => isTooLate(dateStr, t));
+}
+
+function updateStatus(service, data) {
     const statusEl = document.getElementById(`status-${service}`);
     const btn = document.querySelector(`button[data-service="${service}"]`);
 
     if (!statusEl || !btn) return;
 
-    // （global 変数をセット） 
+    // ★ グローバル保存
     if (service === "lunch") window.currentLunchData = data || { Availability: 7 };
     if (service === "dinner") window.currentDinnerData = data || { Availability: 7 };
-    const date = document.getElementById("resDate").value;
 
-    // availability の seats（データがなければ 7）
     const seats = data ? Number(data.Availability) : 7;
 
-    // ★ availability 表示はまず更新
+    // ---------- availability 表示 ----------
     if (seats > 0) {
         statusEl.textContent = `Disponible (${seats} places)`;
         btn.disabled = false;
@@ -97,19 +102,21 @@ function updateStatus(service, data) {
         btn.classList.add("disabled");
     }
 
-    // ★ NEW：時間帯が全部締切 → availability に関係なく disable
+    // ---------- ここで締切チェック ----------
+    const date = document.getElementById("resDate").value;
+
     if (isAllTimesClosed(date, service)) {
-        console.log(`All times closed for ${service}`);
         statusEl.textContent = "Fermé (trop tard)";
         btn.disabled = true;
         btn.classList.add("disabled");
     }
 
-    // ★ Pax 上限更新（selected.service が一致する時だけ）
+    // Pax 上限更新
     if (selected.service === service) {
         updatePaxLimit(seats);
     }
 }
+
 
 
 function forceAvailable() {
@@ -448,6 +455,7 @@ document.getElementById("sendReservation").onclick = async () => {
         showStep(5);
     }
 };
+
 
 
 
