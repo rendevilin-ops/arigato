@@ -13,45 +13,34 @@
    A R I G A T O   -  Minimal Grey Theme
 ---------------------------------------------------- */
 
-:root {
-    --bg: #fafafa;
-    --text: #333;
-    --text-light: #555;
-
-    --border: #ccc;
-    --border-light: #e2e2e2;
-
-    --btn: #333;
-    --btn-hover: #555;
-    --btn-disabled: #aaa;
-
-    --box-bg: #f3f3f3;
-
-    --service-bg-active: #ddd;
-    --service-bg-disabled: #e0e0e0;
-
-    --radius: 10px;
-}
-
 /* Layout */
+/* ========== BASE ========== */
 body {
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: sans-serif;
     max-width: 480px;
     margin: auto;
     padding: 20px;
-    background: var(--bg);
-    color: var(--text);
+
+    background: #FFF6F0;       /* 柔らかいベージュ */
+    color: #2A1A14;            /* 読みやすい濃いブラウン */
 }
 
-/* Mobile Flex Fix */
-@media screen and (max-width: 768px) {
-    .container { flex-direction: column; }
-}
-.container {
-    display: flex;
-    flex-direction: row;
+/* 全体トーンを合わせる */
+input, select, textarea {
+    font-size: 16px !important;
+    background: #FFFFFF;
+    border: 1px solid #D8CCC6;
+    padding: 12px;
+    border-radius: 8px;
+    color: #2A1A14;
 }
 
+/* 見出し */
+h2, h3 {
+    color: #2A1A14;
+}
+
+/* ========== STEP BOXES ========== */
 .step {
     display: none;
 }
@@ -59,96 +48,102 @@ body {
     display: block;
 }
 
-/* Inputs */
-input,
-select,
-textarea {
-    font-size: 16px !important;
-    border: 1px solid var(--border);
-    padding: 10px;
-    border-radius: var(--radius);
-    width: 100%;
-    box-sizing: border-box;
-    background: white;
-    color: var(--text);
+/* サマリーボックス */
+.summary-box {
+    background: #FFF0E8;       /* ソフトなサーモン */
+    padding: 14px;
+    border-radius: 10px;
+    margin-top: 10px;
+    border: 1px solid #E4D5CF;
 }
 
-/* Main Button */
+/* ========== BUTTONS ========== */
+
+/* メインボタン：濃いブラウン */
 button {
     margin-top: 20px;
     padding: 14px;
     width: 100%;
     font-size: 18px;
-    background: var(--btn);
+    background: #22150F;       /* ダークブラウン */
     color: white;
     border: none;
-    border-radius: var(--radius);
-    transition: background 0.2s;
+    border-radius: 10px;
+    transition: 0.2s;
 }
 button:hover {
-    background: var(--btn-hover);
-}
-button:disabled {
-    background: var(--btn-disabled);
-    cursor: not-allowed;
+    background: #3A241C;
 }
 
-/* Navigation Buttons */
+/* 前へ・次へ の 2分割 */
 .nav-btns {
     margin-top: 20px;
     display: flex;
     justify-content: space-between;
 }
+
 .nav-btns button {
     width: 48%;
 }
 
-/* Summary Box */
-.summary-box {
-    background: var(--box-bg);
-    padding: 14px;
-    border-radius: var(--radius);
-    margin-top: 10px;
-    border: 1px solid var(--border-light);
-}
-
-/* Service Buttons */
+/* ========== SERVICE BUTTONS ========== */
 .service-btn {
     padding: 15px;
-    border-radius: var(--radius);
+    border-radius: 10px;
     width: 140px;
-    border: 1px solid var(--border);
-    background: white;
-    transition: background 0.2s;
-    color: var(--text);
+    border: 1px solid #C7BAB4;
+    background: #FFFFFF;
+    color: #2A1A14;
+    transition: 0.2s;
 }
 .service-btn:hover {
-    background: #eee;
+    background: #FFEDE2;      /* 軽いサーモン */
 }
-.service-btn.active {
-    background: var(--service-bg-active);
-}
+
 .service-btn.disabled {
     opacity: 0.4;
-    background: var(--service-bg-disabled);
+    background: #E9DED9;
+    border-color: #C5BBB6;
     cursor: not-allowed;
 }
 
-/* Small status text */
+/* ステータステキスト */
 .service-status {
     font-size: 14px;
-    opacity: 0.7;
+    opacity: 0.75;
 }
 
-/* Loading Overlay */
+/* ========== TIME BUTTONS ========== */
+#timeButtons button {
+    background: #FFFFFF;
+    border: 1px solid #C7BAB4;
+    padding: 10px 16px;
+    border-radius: 8px;
+    margin: 4px;
+    color: #2A1A14;
+}
+#timeButtons button:hover {
+    background: #FFEDE2;
+}
+#timeButtons button:disabled {
+    opacity: 0.35;
+    background: #E0D6D2;
+    border-color: #CEC4C0;
+}
+
+/* 選択状態 */
+#timeButtons button.selected {
+    background: #22150F;
+    color: white;
+}
+
+/* ========== LOADING OVERLAY ========== */
 #loadingOverlay {
     display: none;
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.35);
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(34, 21, 15, 0.6); /* ブラウンに寄せた半透明 */
     backdrop-filter: blur(2px);
     z-index: 9999;
     justify-content: center;
@@ -157,20 +152,22 @@ button:disabled {
 }
 
 .spinner {
-    border: 6px solid #eee;
-    border-top: 6px solid #333;
+    border: 6px solid #f3f3f3;
+    border-top: 6px solid #22150F;
     border-radius: 50%;
     width: 60px;
     height: 60px;
     animation: spin 1s linear infinite;
-}
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
 }
 
 .loading-text {
     margin-top: 16px;
     font-size: 18px;
     color: white;
+}
+
+/* キーフレーム */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
