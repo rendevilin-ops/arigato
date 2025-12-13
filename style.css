@@ -176,6 +176,13 @@ textarea {
     color: #E57373;
 }
 
+.optin-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;       /* 文字とチェックの間の余白 */
+    margin-top: 10px;
+}
+
 input[type="checkbox"] {
     accent-color: #E57373;
 }
@@ -214,6 +221,7 @@ input[type="checkbox"] {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
 
 
 
