@@ -36,7 +36,11 @@ input, select, textarea {
 }
 
 /* 見出し */
-h2, h3 {
+h2 {
+    color: #CB2315;
+}
+
+h3 {
     color: #E57373;
 }
 
@@ -256,6 +260,7 @@ input[type="checkbox"] {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
 
 
 
