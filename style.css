@@ -106,9 +106,8 @@ button:hover {
     color: #E57373;
     transition: 0.2s;
     display: flex;
-    gap: 12px;            /* ボタンの間隔 */
-    margin: 12px 0;
-    flex: 1;
+    flex-wrap: nowrap !important;  /* 絶対に折り返させない */
+    gap: 12px;
 }
 .service-btn:hover {
     background: #FFEDE2;      /* 軽いサーモン */
@@ -264,6 +263,7 @@ input[type="checkbox"] {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
 
 
 
