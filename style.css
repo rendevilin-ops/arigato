@@ -201,16 +201,16 @@ input[type="checkbox"] {
 }
 
 #step1 label 
-#step2 select,
-#step2 textarea {
+#step1 select,
+#step1 textarea {
     margin-top: 12px;
     display: block;   
 }
-#step3 label,
-#step3 select,
-#step3 textarea {
-    padding: 12px;
-    display: block;   /* select と textarea も揃う */
+/*#step3 label,
+/*#step3 select,
+/*#step3 textarea {
+/*    padding: 12px;
+/*    display: block;   /* select と textarea も揃う */
 }
 
 #step3 .optin-label {
@@ -254,6 +254,7 @@ input[type="checkbox"] {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
 
 
 
