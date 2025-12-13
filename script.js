@@ -97,7 +97,7 @@ function updateStatus(service, data) {
     const date = document.getElementById("resDate").value;
 
     if (isAllTimesClosed(date, service)) {
-        statusEl.textContent = "Fermé (trop tard)";
+        statusEl.textContent = "Indisponible";
         btn.disabled = true;
         btn.classList.add("disabled");
     }
@@ -456,6 +456,7 @@ document.getElementById("sendReservation").onclick = async () => {
         showStep(5);
     }
 };
+
 
 
 
