@@ -121,6 +121,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
 document.getElementById("resDate").addEventListener("change", updateServiceAvailability);
 
+/* --- 締め切り（2時間30分前） --- */
+function isTooLate(dateStr, timeStr) {
+    if (!dateStr || !timeStr) return false;
+
+    // timeStr = "12:00" → 時・分に分解
+    const [h, m] = timeStr.split(":").map(Number);
+
+    // 予約希望日時
+    const target = new Date(`${dateStr}T${timeStr}:00`);
+    const now = new Date();
+
+    const diffMs = target - now;
+    const diffHours = diffMs / (1000 * 60 * 60);
+
+    return diffHours < 2.5; // ★ 2時間半前に締め切り
+}
+
+
 /* Step1 — 日付 */
 function setToday() {
     const t = new Date();
@@ -235,11 +253,20 @@ function updateTimeButtons() {
         const b = document.createElement("button");
         b.textContent = t;
         b.style.margin = "5px";
+
+        // ★ 2.5時間前締め切りチェック
+        if (isTooLate(document.getElementById("resDate").value, t)) {
+            b.disabled = true;
+            b.style.opacity = "0.4";
+        }
+
         b.onclick = () => {
+            if (b.disabled) return;
             selected.time = t;
             document.querySelectorAll("#timeButtons button").forEach(bb => bb.style.background = "");
             b.style.background = "#ccc";
         };
+
         box.appendChild(b);
     });
 }
@@ -400,4 +427,5 @@ document.getElementById("sendReservation").onclick = async () => {
         showStep(5);
     }
 };
+
 
