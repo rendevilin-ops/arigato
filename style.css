@@ -93,16 +93,16 @@ button:hover {
     width: 140px;
     border: 1px solid #C7BAB4;
     background: #FFFFFF;
-    color: #2A1A14;
+    color: #014B3F;
     transition: 0.2s;
 }
 .service-btn:hover {
-    background: #FFEDE2;      /* 軽いサーモン */
+    background: #02CA81;      /* 軽いサーモン */
 }
 
 .service-btn.disabled {
     opacity: 0.4;
-    background: #E9DED9;
+    background: #C7BCB4;
     border-color: #C5BBB6;
     cursor: not-allowed;
 }
@@ -171,3 +171,4 @@ button:hover {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
