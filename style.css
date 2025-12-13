@@ -61,7 +61,6 @@ h2, h3 {
 
 /* メインボタン：濃いブラウン */
 button {
-    margin-top: 20px;
     padding: 14px;
     width: 100%;
     font-size: 18px;
@@ -73,6 +72,13 @@ button {
 }
 button:hover {
     background: #CB2315;
+}
+.nav-btns button {
+    width: 48%;
+    margin-top: 20px;
+}
+.date-btn {
+    margin-top: 0 !important;
 }
 
 /* 前へ・次へ の 2分割 */
@@ -248,6 +254,7 @@ input[type="checkbox"] {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
 
 
 
