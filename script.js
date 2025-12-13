@@ -316,8 +316,9 @@ document.getElementById("toStep2").onclick = () => {
     showStep(2);
 };
 
-/* Step2 → Step3 */
+/* ---- Step2 → Step3 ---- */
 
+// kids / vegCount を pax に合わせて作り直す
 function updateSelectLimit(selectEl, max) {
     selectEl.innerHTML = "";
     for (let i = 0; i <= max; i++) {
@@ -341,7 +342,7 @@ document.getElementById("toStep3").onclick = () => {
         return;
     }
 
-    // ★ ここで kids / vegCount の上限を pax に合わせる
+    // ★ pax に合わせて kids / veg の最大値を制限
     const pax = Number(selected.pax);
     updateSelectLimit(document.getElementById("kids"), pax);
     updateSelectLimit(document.getElementById("vegCount"), pax);
@@ -353,8 +354,19 @@ document.getElementById("toStep3").onclick = () => {
 };
 
 
+/* ---- Step3 → Menu（Step3.5） ---- */
+document.getElementById("toMenu").onclick = () => {
+    showStep("Menu");
+};
 
-/* Step3 → Step4 */
+
+/* ---- StepMenu → Step3 ---- */
+document.getElementById("backFromMenu").onclick = () => {
+    showStep(3);
+};
+
+
+/* ---- Step3 → Step4 ---- */
 document.getElementById("back2").onclick = () => showStep(2);
 
 document.getElementById("toStep4").onclick = () => {
@@ -378,11 +390,12 @@ document.getElementById("toStep4").onclick = () => {
     Végétariens : ${selected.veg}<br>
     Occasion spéciale : ${selected.celebration ? "Oui" : "Non"}<br>
     Commentaire : ${selected.comment || "—"}
-  `;
+    `;
 
     document.getElementById("summaryAll").innerHTML = html;
     showStep(4);
 };
+
 
 /* Step4 — API送信 */
 document.getElementById("back3").onclick = () => showStep(3);
@@ -422,6 +435,10 @@ document.getElementById("sendReservation").onclick = async () => {
         vegCount: Number(selected.veg || 0),
         comment: selected.comment?.trim() || "",
         optin: document.getElementById("optin").checked
+
+        kaiseki: document.getElementById("kaiseki").checked,
+        sake: document.getElementById("sake").checked,
+
     };
 
     console.log("PAYLOAD_SENT", payload); // ← デバッグ用
@@ -474,6 +491,7 @@ document.getElementById("sendReservation").onclick = async () => {
         showStep(5);
     }
 };
+
 
 
 
