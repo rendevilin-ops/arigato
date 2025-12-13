@@ -178,13 +178,27 @@ textarea {
 
 .optin-label {
     display: flex;
-    align-items: center;
+    align-items: left;
     gap: 8px;       /* 文字とチェックの間の余白 */
     margin-top: 10px;
 }
 
 input[type="checkbox"] {
     accent-color: #E57373;
+}
+
+#step3 label,
+#step3 select,
+#step3 textarea {
+    margin-top: 12px;
+    display: block;   /* select と textarea も揃う */
+}
+
+#step3 .optin-label {
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 /* ========== LOADING OVERLAY ========== */
@@ -221,6 +235,7 @@ input[type="checkbox"] {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
 
 
 
