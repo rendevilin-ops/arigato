@@ -124,7 +124,7 @@ button:hover {
 
 .service-btn.disabled {
     opacity: 0.4;
-    background: #FFEDE2;
+    background: #CB2315;
     border-color: #C5BBB6;
     cursor: not-allowed;
 }
@@ -272,6 +272,7 @@ input[type="checkbox"] {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
 
 
 
