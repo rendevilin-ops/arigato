@@ -144,6 +144,16 @@ function isTooLate(dateStr, timeStr) {
     return diffHours < 2.5; // ★ 2時間半前に締め切り
 }
 
+/* --- そのサービスの全タイムが締め切りか判定（ここを追加） --- */
+function isAllTimesClosed(dateStr, service) {
+    const lunch = ["12:00", "12:30", "13:00", "13:30"];
+    const dinner = ["20:00", "20:30", "21:00"];
+    const times = service === "lunch" ? lunch : dinner;
+
+    return times.every(t => isTooLate(dateStr, t));
+}
+
+
 
 /* Step1 — 日付 */
 function setToday() {
@@ -433,6 +443,7 @@ document.getElementById("sendReservation").onclick = async () => {
         showStep(5);
     }
 };
+
 
 
 
