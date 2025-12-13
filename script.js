@@ -78,12 +78,9 @@ function updateStatus(service, data) {
 
     if (!statusEl || !btn) return;
 
-    // グローバルに保存する（必ず毎回セットされる）
-    if (service === "lunch") window.currentLunchData = data || { Availability: 7 };
-    if (service === "dinner") window.currentDinnerData = data || { Availability: 7 };
-
     const seats = data ? Number(data.Availability) : 7;
 
+    // availability の基本表示
     if (seats > 0) {
         statusEl.textContent = `Disponible (${seats} places)`;
         btn.disabled = false;
@@ -94,7 +91,16 @@ function updateStatus(service, data) {
         btn.classList.add("disabled");
     }
 
-    // 現在選択中の service に対して人数制限を即反映
+    // ★ NEW: 時間帯すべて締切かチェック
+    const date = document.getElementById("resDate").value;
+    if (isAllTimesClosed(date, service)) {
+        console.log(`All times closed for ${service}`);
+        btn.disabled = true;
+        btn.classList.add("disabled");
+        statusEl.textContent = "Fermé (trop tard)";
+    }
+
+    // Pax 上限更新
     if (selected.service === service) {
         updatePaxLimit(seats);
     }
@@ -245,7 +251,7 @@ function updateTimeButtons() {
 
     if (!selected.service) return;
 
-    const lunch = ["12:00", "12:30", "13:00", "13:30"];
+    const lunch = ["12:00", "12:30", "13:00"];
     const dinner = ["20:00", "20:30", "21:00"];
     const times = selected.service === "lunch" ? lunch : dinner;
 
@@ -427,5 +433,6 @@ document.getElementById("sendReservation").onclick = async () => {
         showStep(5);
     }
 };
+
 
 
