@@ -97,7 +97,7 @@ button:hover {
     transition: 0.2s;
 }
 .service-btn:hover {
-    background: #02CA81;      /* 軽いサーモン */
+    background: #FFEDE2;      /* 軽いサーモン */
 }
 
 .service-btn.disabled {
@@ -133,7 +133,7 @@ button:hover {
 
 /* 選択状態 */
 #timeButtons button.selected {
-    background: #22150F;
+    background: #F7685C;
     color: white;
 }
 
@@ -171,4 +171,5 @@ button:hover {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
 
