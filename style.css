@@ -180,7 +180,7 @@ textarea {
     display: flex;
     align-items: left;
     gap: 8px;       /* 文字とチェックの間の余白 */
-    margin-top: 10px;
+    margin-top: 12px;
 }
 
 input[type="checkbox"] {
@@ -235,6 +235,7 @@ input[type="checkbox"] {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
 
 
 
