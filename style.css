@@ -187,7 +187,9 @@ input[type="checkbox"] {
     accent-color: #E57373;
 }
 
-#step1 label {
+#step1 label 
+#step2 select,
+#step2 textarea {
     margin-top: 12px;
     display: block;   
 }
@@ -239,6 +241,7 @@ input[type="checkbox"] {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
 
 
 
