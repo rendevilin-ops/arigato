@@ -70,15 +70,6 @@ async function updateServiceAvailability() {
     updateStatus("dinner", dinner);
 }
 
-// ★ 全時間帯が締切かどうかを判定する関数
-function isAllTimesClosed(dateStr, service) {
-    const lunchTimes = ["12:00", "12:30", "13:00"];
-    const dinnerTimes = ["20:00", "20:30", "21:00"];
-    const times = service === "lunch" ? lunchTimes : dinnerTimes;
-
-    return times.every(t => isTooLate(dateStr, t));
-}
-
 function updateStatus(service, data) {
     const statusEl = document.getElementById(`status-${service}`);
     const btn = document.querySelector(`button[data-service="${service}"]`);
@@ -158,12 +149,13 @@ function isTooLate(dateStr, timeStr) {
 
 /* --- そのサービスの全タイムが締め切りか判定（ここを追加） --- */
 function isAllTimesClosed(dateStr, service) {
-    const lunch = ["12:00", "12:30", "13:00", "13:30"];
+    const lunch = ["12:00", "12:30", "13:00"];  
     const dinner = ["20:00", "20:30", "21:00"];
     const times = service === "lunch" ? lunch : dinner;
 
     return times.every(t => isTooLate(dateStr, t));
 }
+
 
 
 
@@ -455,6 +447,7 @@ document.getElementById("sendReservation").onclick = async () => {
         showStep(5);
     }
 };
+
 
 
 
