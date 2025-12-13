@@ -72,7 +72,7 @@ button {
     transition: 0.2s;
 }
 button:hover {
-    background: #FFEDE2;
+    background: #FFF0E8;
 }
 
 /* 前へ・次へ の 2分割 */
@@ -93,7 +93,7 @@ button:hover {
     width: 140px;
     border: 1px solid #C7BAB4;
     background: #FFFFFF;
-    color: #014B3F;
+    color: #E57373;
     transition: 0.2s;
 }
 .service-btn:hover {
@@ -183,6 +183,7 @@ textarea {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
 
 
 
