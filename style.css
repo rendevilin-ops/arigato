@@ -147,6 +147,8 @@ textarea {
     border-radius: 10px;
     padding: 12px;
     font-size: 16px;
+    width: 100%;
+    box-sizing: border-box; /* ← padding ありでもはみ出さない */
 }
 
 /* ラベル + インプットを横一列にする */
@@ -209,6 +211,7 @@ textarea {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
 
 
 
