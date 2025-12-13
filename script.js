@@ -241,22 +241,25 @@ function updatePaxLimit(seats) {
 document.querySelectorAll(".service-btn").forEach(btn => {
     btn.onclick = () => {
         selected.service = btn.dataset.service;
-        document.querySelectorAll(".service-btn").forEach(b => b.style.background = "");
-        btn.style.background = "#ccc";
-        
+
+        document.querySelectorAll(".service-btn").forEach(b =>
+            b.classList.remove("selected")
+        );
+
+        btn.classList.add("selected");
+
         updateTimeButtons();
-    
-        // サービス選択後、Availability に応じて人数制限も更新
+
         const statusData = (btn.dataset.service === "lunch")
             ? currentLunchData
             : currentDinnerData;
-    
+
         if (statusData) {
             updatePaxLimit(Number(statusData.Availability));
         }
     };
-
 });
+
 
 function updateTimeButtons() {
     const box = document.getElementById("timeButtons");
@@ -279,13 +282,19 @@ function updateTimeButtons() {
             b.disabled = true;
             b.style.opacity = "0.4";
         }
-
+        b.classList.add("time-btn");
+        
         b.onclick = () => {
             if (b.disabled) return;
             selected.time = t;
-            document.querySelectorAll("#timeButtons button").forEach(bb => bb.style.background = "");
-            b.style.background = "#ccc";
+        
+            document.querySelectorAll("#timeButtons .time-btn").forEach(bb =>
+                bb.classList.remove("selected")
+            );
+        
+            b.classList.add("selected");
         };
+        
 
         box.appendChild(b);
     });
@@ -447,6 +456,7 @@ document.getElementById("sendReservation").onclick = async () => {
         showStep(5);
     }
 };
+
 
 
 
