@@ -177,6 +177,8 @@ textarea {
     text-align: left;
     color: #E57373;
     font-weight: 600;
+    display: block;
+    margin-bottom: 6px;
 }
 
 .form-input {
@@ -254,6 +256,7 @@ input[type="checkbox"] {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
 
 
 
