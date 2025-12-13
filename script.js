@@ -317,6 +317,17 @@ document.getElementById("toStep2").onclick = () => {
 };
 
 /* Step2 → Step3 */
+
+function updateSelectLimit(selectEl, max) {
+    selectEl.innerHTML = "";
+    for (let i = 0; i <= max; i++) {
+        const opt = document.createElement("option");
+        opt.value = i;
+        opt.textContent = i;
+        selectEl.appendChild(opt);
+    }
+}
+
 document.getElementById("back1").onclick = () => showStep(1);
 
 document.getElementById("toStep3").onclick = () => {
@@ -330,11 +341,18 @@ document.getElementById("toStep3").onclick = () => {
         return;
     }
 
+    // ★ ここで kids / vegCount の上限を pax に合わせる
+    const pax = Number(selected.pax);
+    updateSelectLimit(document.getElementById("kids"), pax);
+    updateSelectLimit(document.getElementById("vegCount"), pax);
+
     document.getElementById("summary2").innerHTML =
         `👤 ${last} ${first}<br>📧 ${email}<br>📞 ${phone}`;
 
     showStep(3);
 };
+
+
 
 /* Step3 → Step4 */
 document.getElementById("back2").onclick = () => showStep(2);
@@ -456,6 +474,7 @@ document.getElementById("sendReservation").onclick = async () => {
         showStep(5);
     }
 };
+
 
 
 
