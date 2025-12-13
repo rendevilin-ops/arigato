@@ -434,10 +434,10 @@ document.getElementById("sendReservation").onclick = async () => {
         celebration: Boolean(selected.celebration),
         vegCount: Number(selected.veg || 0),
         comment: selected.comment?.trim() || "",
-        optin: document.getElementById("optin").checked
+        optin: document.getElementById("optin").checked,
 
         kaiseki: document.getElementById("kaiseki").checked,
-        sake: document.getElementById("sake").checked,
+        sake: document.getElementById("sake").checked
 
     };
 
@@ -491,6 +491,7 @@ document.getElementById("sendReservation").onclick = async () => {
         showStep(5);
     }
 };
+
 
 
 
