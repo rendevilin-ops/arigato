@@ -78,9 +78,15 @@ function updateStatus(service, data) {
 
     if (!statusEl || !btn) return;
 
+    // （global 変数をセット） 
+    if (service === "lunch") window.currentLunchData = data || { Availability: 7 };
+    if (service === "dinner") window.currentDinnerData = data || { Availability: 7 };
+    const date = document.getElementById("resDate").value;
+
+    // availability の seats（データがなければ 7）
     const seats = data ? Number(data.Availability) : 7;
 
-    // availability の基本表示
+    // ★ availability 表示はまず更新
     if (seats > 0) {
         statusEl.textContent = `Disponible (${seats} places)`;
         btn.disabled = false;
@@ -91,16 +97,15 @@ function updateStatus(service, data) {
         btn.classList.add("disabled");
     }
 
-    // ★ NEW: 時間帯すべて締切かチェック
-    const date = document.getElementById("resDate").value;
+    // ★ NEW：時間帯が全部締切 → availability に関係なく disable
     if (isAllTimesClosed(date, service)) {
         console.log(`All times closed for ${service}`);
+        statusEl.textContent = "Fermé (trop tard)";
         btn.disabled = true;
         btn.classList.add("disabled");
-        statusEl.textContent = "Fermé (trop tard)";
     }
 
-    // Pax 上限更新
+    // ★ Pax 上限更新（selected.service が一致する時だけ）
     if (selected.service === service) {
         updatePaxLimit(seats);
     }
