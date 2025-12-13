@@ -149,6 +149,28 @@ textarea {
     font-size: 16px;
 }
 
+/* ラベル + インプットを横一列にする */
+.form-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin: 10px 0;
+}
+
+/* ラベルを左側 */
+.form-label {
+    flex: 1;
+    text-align: left;
+    font-weight: 600;
+}
+
+/* 入力欄を右側に寄せる */
+.form-input {
+    flex: 1;
+    text-align: right;
+}
+
 /* ========== LOADING OVERLAY ========== */
 #loadingOverlay {
     display: none;
@@ -183,6 +205,7 @@ textarea {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
 
 
 
