@@ -134,7 +134,7 @@ button:hover {
 /* 選択状態 */
 .service-btn.selected,
 .time-btn.selected {
-    background: #E57373 !important;
+    background: #CB2315 !important;
     color: white !important;
 }
 
@@ -183,6 +183,7 @@ textarea {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
 
 
 
