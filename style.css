@@ -105,6 +105,8 @@ button:hover {
     background: #FFFFFF;
     color: #E57373;
     transition: 0.2s;
+    flex: 1;    
+    width: auto;
 }
 .service-btn:hover {
     background: #FFEDE2;      /* 軽いサーモン */
@@ -260,6 +262,7 @@ input[type="checkbox"] {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
 
 
 
