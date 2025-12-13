@@ -21,7 +21,7 @@
         <h3>1. Choisissez la date, le service et le nombre de personnes</h3>
 
         <!-- Date -->
-        <label>Date</label>
+        <label class="form-label">Date</label>
         <div style="display:flex; gap:10px; align-items:center;">
             <button type="button" id="prevDate" class="date-btn">←</button>
             <input type="date" id="resDate" style="flex:1">
@@ -29,7 +29,7 @@
         </div><br>
 
         <!-- Pax -->
-        <label>Nombre de personnes</label>
+        <label class="form-label">Nombre de personnes</label>
         <select id="resPax">
             <option>1</option>
             <option>2</option>
@@ -41,7 +41,7 @@
         </select><br><br>
 
         <!-- Service -->
-        <label>Service</label>
+        <label class="form-label">Service</label>
         <div id="serviceButtons">
             <button type="button" class="service-btn" data-service="lunch">
                 <span class="service-title">Déjeuner</span><br>
@@ -55,7 +55,7 @@
         </div><br><br>
 
         <!-- Time -->
-        <label>Heure</label>
+        <label class="form-label">Heure</label>
         <div id="timeButtons"></div>
 
         <button id="toStep2">Continuer</button>
@@ -108,7 +108,7 @@
 
         <div id="summary2" class="summary-box"></div>
 
-        <label>Enfants (moins de 15 ans)</label>
+        <label class="form-label">Enfants (moins de 15 ans)</label>
         <select id="kids">
             <option value="0">0</option>
             <option value="1">1</option>
@@ -120,7 +120,7 @@
             <option value="7">7</option>
         </select>
 
-        <label>Nombre de personnes végétariennes</label>
+        <label class="form-label">Nombre de personnes végétariennes</label>
         <select id="vegCount">
             <option value="0">0</option>
             <option value="1">1</option>
@@ -137,7 +137,7 @@
             <input type="checkbox" id="celebration">
         </label><br>
 
-        <label>Commentaire</label>
+        <label class="form-label">Commentaire</label>
         <textarea id="comment"></textarea>
 
         <div class="nav-btns">
@@ -180,6 +180,7 @@
 
 
 </html>
+
 
 
 
