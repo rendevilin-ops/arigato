@@ -55,7 +55,7 @@ h3 {
 /* サマリーボックス */
 .summary-box {
     background: #FFF0E8;       /* ソフトなサーモン */
-
+    padding: 14px;
     border-radius: 10px;
     margin-top: 10px;
     border: 1px solid #E4D5CF;
@@ -272,6 +272,7 @@ input[type="checkbox"] {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
 
 
 
