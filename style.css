@@ -72,7 +72,7 @@ button {
     transition: 0.2s;
 }
 button:hover {
-    background: #3A241C;
+    background: #FFEDE2;
 }
 
 /* 前へ・次へ の 2分割 */
@@ -138,6 +138,16 @@ button:hover {
     color: white !important;
 }
 
+/* ========== text area ========== */
+input,
+select,
+textarea {
+    background: #FFF8F4;
+    border: 1px solid #DCCFC8;
+    border-radius: 10px;
+    padding: 12px;
+    font-size: 16px;
+}
 
 /* ========== LOADING OVERLAY ========== */
 #loadingOverlay {
@@ -173,6 +183,7 @@ button:hover {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
 
 
 
