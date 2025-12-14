@@ -363,8 +363,22 @@ document.getElementById("toStep3").onclick = () => {
 
 /* ---- Step3 → Menu（Step3.5） ---- */
 document.getElementById("toMenu").onclick = () => {
-    showStep("Menu");
+    const service = selected.service;
+
+    if (service === "lunch") {
+        // 昼は Menu（3.5）をスキップ → step4 へ
+        selected.kids = document.getElementById("kids").value;
+        selected.veg = document.getElementById("vegCount").value;
+        selected.celebration = document.getElementById("celebration").checked;
+        selected.comment = document.getElementById("comment").value.trim();
+
+        showStep(4);
+    } else {
+        // Dinner の場合は 3.5（Menu Kaiseki）へ
+        showStep("Menu");
+    }
 };
+
 
 
 /* ---- StepMenu → Step3 ---- */
@@ -406,8 +420,13 @@ document.getElementById("toStep4").onclick = () => {
 
 /* Step4 — API送信 */
 document.getElementById("back3").onclick = () => {
-    showStep("Menu");
+    if (selected.service === "lunch") {
+        showStep(3);    // 昼は直接 STEP3 へ戻る
+    } else {
+        showStep("Menu");  // 夜は STEP3.5 に戻る
+    }
 };
+
 
 document.getElementById("sendReservation").onclick = async () => {
 
@@ -497,6 +516,7 @@ document.getElementById("sendReservation").onclick = async () => {
         showStep(5);
     }
 };
+
 
 
 
