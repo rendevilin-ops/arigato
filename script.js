@@ -364,21 +364,43 @@ document.getElementById("toStep3").onclick = () => {
 /* ---- Step3 → Menu（Step3.5） ---- */
 document.getElementById("toMenu").onclick = () => {
     const service = selected.service;
+document.getElementById("toMenu").onclick = () => {
+
+    const service = selected.service;
+
+    // 共通で Step3 の情報を保存
+    selected.kids = document.getElementById("kids").value;
+    selected.veg = document.getElementById("vegCount").value;
+    selected.celebration = document.getElementById("celebration").checked;
+    selected.comment = document.getElementById("comment").value.trim();
 
     if (service === "lunch") {
-        // 昼は Menu（3.5）をスキップ → step4 へ
-        selected.kids = document.getElementById("kids").value;
-        selected.veg = document.getElementById("vegCount").value;
-        selected.celebration = document.getElementById("celebration").checked;
-        selected.comment = document.getElementById("comment").value.trim();
+        // ★ Lunch の場合は 3.5 をスキップするため、サマリーをここで作る
+        const html = `
+            <strong>📅 Date :</strong> ${selected.date}<br>
+            <strong>🕒 Heure :</strong> ${selected.time} (${selected.service})<br>
+            <strong>👥 Nombre :</strong> ${selected.pax}<br><br>
+
+            <strong>👤 Client :</strong><br>
+            ${document.getElementById("lastName").value} ${document.getElementById("firstName").value}<br>
+            📧 ${document.getElementById("email").value}<br>
+            📞 ${document.getElementById("phone").value}<br><br>
+
+            <strong>Remarques :</strong><br>
+            Enfants : ${selected.kids}<br>
+            Végétariens : ${selected.veg}<br>
+            Occasion spéciale : ${selected.celebration ? "Oui" : "Non"}<br>
+            Commentaire : ${selected.comment || "—"}
+        `;
+        document.getElementById("summaryAll").innerHTML = html;
 
         showStep(4);
+
     } else {
-        // Dinner の場合は 3.5（Menu Kaiseki）へ
+        // Dinner → Menu へ
         showStep("Menu");
     }
 };
-
 
 
 /* ---- StepMenu → Step3 ---- */
@@ -516,6 +538,7 @@ document.getElementById("sendReservation").onclick = async () => {
         showStep(5);
     }
 };
+
 
 
 
