@@ -85,7 +85,7 @@ function updateStatus(service, data) {
     if (service === "lunch") window.currentLunchData = data || { Availability: 7 };
     if (service === "dinner") window.currentDinnerData = data || { Availability: 7 };
 
-    const seats = data ? Number(data.Availability) : 7;
+    const seats = Math.max(0, Number(data?.Availability ?? 7));  // ✨ 負の数字はすべて 0 として扱う
 
     // ---------- availability 表示 ----------
     if (seats > 0) {
@@ -497,6 +497,7 @@ document.getElementById("sendReservation").onclick = async () => {
         showStep(5);
     }
 };
+
 
 
 
