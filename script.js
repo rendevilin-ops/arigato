@@ -364,18 +364,15 @@ document.getElementById("toStep3").onclick = () => {
 /* ---- Step3 → Menu（Step3.5） ---- */
 document.getElementById("toMenu").onclick = () => {
     const service = selected.service;
-document.getElementById("toMenu").onclick = () => {
 
-    const service = selected.service;
-
-    // 共通で Step3 の情報を保存
+    // Step3 の情報を共通で保存
     selected.kids = document.getElementById("kids").value;
     selected.veg = document.getElementById("vegCount").value;
     selected.celebration = document.getElementById("celebration").checked;
     selected.comment = document.getElementById("comment").value.trim();
 
     if (service === "lunch") {
-        // ★ Lunch の場合は 3.5 をスキップするため、サマリーをここで作る
+        // ★ Lunch → Menu（3.5）をスキップ。ここで summary を作る
         const html = `
             <strong>📅 Date :</strong> ${selected.date}<br>
             <strong>🕒 Heure :</strong> ${selected.time} (${selected.service})<br>
@@ -395,9 +392,8 @@ document.getElementById("toMenu").onclick = () => {
         document.getElementById("summaryAll").innerHTML = html;
 
         showStep(4);
-
     } else {
-        // Dinner → Menu へ
+        // Dinner → Menu（3.5）
         showStep("Menu");
     }
 };
@@ -538,6 +534,7 @@ document.getElementById("sendReservation").onclick = async () => {
         showStep(5);
     }
 };
+
 
 
 
