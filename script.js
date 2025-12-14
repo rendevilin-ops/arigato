@@ -398,7 +398,9 @@ document.getElementById("toStep4").onclick = () => {
 
 
 /* Step4 — API送信 */
-document.getElementById("back3").onclick = () => showStep(3);
+document.getElementById("back3").onclick = () => {
+    showStep("Menu");
+};
 
 document.getElementById("sendReservation").onclick = async () => {
 
@@ -491,6 +493,7 @@ document.getElementById("sendReservation").onclick = async () => {
         showStep(5);
     }
 };
+
 
 
 
