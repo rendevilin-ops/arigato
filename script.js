@@ -1,7 +1,12 @@
 /* ページ切り替え */
-function showStep(n) {
+function showStep(step) {
     document.querySelectorAll(".step").forEach(s => s.classList.remove("active"));
-    document.getElementById("step" + n).classList.add("active");
+
+    if (typeof step === "number") {
+        document.getElementById("step" + step).classList.add("active");
+    } else {
+        document.getElementById("step" + step).classList.add("active");
+    }
 }
 
 /* データ保持 */
@@ -44,7 +49,7 @@ async function updateServiceAvailability() {
 
     } catch (e) {
         console.error("ERROR loading JSON from Upstash:", e);
-        forceAvailable();
+        forceUnavailable();
         return;
     }
 
@@ -108,21 +113,23 @@ function updateStatus(service, data) {
     }
 }
 
-
-
-function forceAvailable() {
-    console.warn("Fallback: marking all available");
+// ★ 安全な fallback（API 死亡時は予約⾮可能にする）
+function forceUnavailable() {
+    console.warn("Fallback: API error → marking ALL unavailable");
 
     ["lunch", "dinner"].forEach(service => {
         const statusEl = document.getElementById(`status-${service}`);
         const btn = document.querySelector(`button[data-service="${service}"]`);
-        if (statusEl) statusEl.textContent = "Disponible (? places)";
+
+        if (statusEl) statusEl.textContent = "Indisponible (Erreur serveur)";
+        
         if (btn) {
-            btn.disabled = false;
-            btn.classList.remove("disabled");
+            btn.disabled = true;
+            btn.classList.add("disabled");
         }
     });
 }
+
 
 document.addEventListener("DOMContentLoaded", () => {
     updateServiceAvailability();
@@ -482,9 +489,6 @@ document.getElementById("sendReservation").onclick = async () => {
     
     showStep(5);
 
-
-        showStep(5);
-
     } catch (err) {
         document.getElementById("loadingOverlay").style.display = "none";
 
@@ -493,6 +497,7 @@ document.getElementById("sendReservation").onclick = async () => {
         showStep(5);
     }
 };
+
 
 
 
