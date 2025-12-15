@@ -7,6 +7,8 @@ function showStep(step) {
     } else {
         document.getElementById("step" + step).classList.add("active");
     }
+
+    window.scrollTo({ top: 0, behavior: "instant" });
 }
 
 /* データ保持 */
@@ -543,6 +545,7 @@ document.getElementById("sendReservation").onclick = async () => {
         showStep(5);
     }
 };
+
 
 
 
