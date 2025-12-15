@@ -414,6 +414,9 @@ document.getElementById("toStep4").onclick = () => {
     selected.celebration = document.getElementById("celebration").checked;
     selected.comment = document.getElementById("comment").value.trim();
 
+    selected.kaiseki = document.getElementById("kaiseki").checked;
+    selected.sake = document.getElementById("sake").checked;
+
     const html = `
     <strong>📅 Date :</strong> ${selected.date}<br>
     <strong>🕒 Heure :</strong> ${selected.time} (${selected.service})<br>
@@ -424,10 +427,16 @@ document.getElementById("toStep4").onclick = () => {
     📧 ${document.getElementById("email").value}<br>
     📞 ${document.getElementById("phone").value}<br><br>
 
+    
+    <strong>Menu :</strong><br>
+    • Menu Kaiseki : <strong>${selected.kaiseki ? "Oui" : "—"}</strong><br>
+    • Accord Saké : <strong>${selected.sake ? "Oui" : "—"}</strong><br><br>
+
+
     <strong>Remarques :</strong><br>
     Enfants : ${selected.kids}<br>
     Végétariens : ${selected.veg}<br>
-    Occasion spéciale : ${selected.celebration ? "Oui" : "Non"}<br>
+    Occasion spéciale : ${selected.celebration ? "Oui" : "—"}<br>
     Commentaire : ${selected.comment || "—"}
     `;
 
@@ -534,6 +543,7 @@ document.getElementById("sendReservation").onclick = async () => {
         showStep(5);
     }
 };
+
 
 
 
