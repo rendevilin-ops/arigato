@@ -81,30 +81,38 @@
     </div>
 
 
-
     <!-- STEP 2 ---------------------------------------------------->
     <div class="step" id="step2">
         <h3>2. Informations du client</h3>
-
+    
         <div id="summary1" class="summary-box"></div>
+    
+        <div class="form-row">
+            <label class="form-label">Nom</label>
+            <input type="text" id="lastName" class="form-input">
+        </div>
+    
+        <div class="form-row">
+            <label class="form-label">Prénom</label>
+            <input type="text" id="firstName" class="form-input">
+        </div>
+    
+        <div class="form-row">
+            <label class="form-label">Email</label>
+            <input type="email" id="email" class="form-input">
+        </div>
+    
+        <div class="form-row">
+            <label class="form-label">Téléphone</label>
+            <input type="text" id="phone" class="form-input">
+        </div>
+    
+        <label class="optin-label">
+            <input type="checkbox" id="optin" checked>
+            J'accepte de recevoir les informations Arigato
 
-        <label>Nom</label>
-        <input type="text" id="lastName"><br>
-
-        <label>Prénom</label>
-        <input type="text" id="firstName"><br>
-
-        <label>Email</label>
-        <input type="email" id="email" value="arigatbot@gmail.com"><br>
-
-        <label>Téléphone</label>
-        <input type="text" id="phone"><br><br>
-
-        <label>
-            <input type="checkbox" id="optin">
-            J'accepte de recevoir les informations Arigato<br>
         </label>
-
+    
         <div class="nav-btns">
             <button id="back1">Retour</button>
             <button id="toStep3">Continuer</button>
