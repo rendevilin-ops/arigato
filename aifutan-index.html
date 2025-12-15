@@ -99,7 +99,7 @@
     
         <div class="form-row">
             <label class="form-label">Email</label>
-            <input type="email" id="email" class="form-input">
+            <input type="email" id="email" class="form-input" value="arigatbot@gmail.com">
         </div>
     
         <div class="form-row">
@@ -160,11 +160,80 @@
 
         <div class="nav-btns">
             <button id="back2">Retour</button>
-            <button id="toStep4">Continuer</button>
+            <button id="toMenu">Continuer</button>
         </div>
     </div>
 
 
+
+    <!-- STEP Menu (3.5) ----------------------------------------------->
+    <div class="step" id="stepMenu">
+        <h3>Menu Kaiseki & Options</h3>
+
+    <div class="summary-box">
+        <strong>Menu Kaiseki</strong><br>
+        <p>
+            Le « menu Kaiseki » est un repas japonais traditionnel
+            composé de plusieurs plats saisonniers servis dans un ordre
+            pensé pour accompagner la conversation et créer un voyage
+            culinaire harmonieux.
+            <br><br>
+
+            <!-- フランス語本編へのリンク -->
+            <a href="kaiseki.html" target="_blank" class="menu-link">
+                Voir la présentation complète du Kaiseki →
+            </a>
+            <br><br>
+
+            <!-- 各言語版ページへのリンク -->
+            What is Kaiseki Cuisine  
+            [
+            <a href="kaiseki_en.html" target="_blank">EN</a>
+            |
+            <a href="kaiseki_it.html" target="_blank">IT</a>
+            |
+            <a href="kaiseki_es.html" target="_blank">ES</a>
+            |
+            <a href="kaiseki_ru.html" target="_blank">RU</a>
+            ]
+        </p><br>
+
+        <label class="optin-label">
+            <input type="checkbox" id="kaiseki">
+            Menu Kaiseki (64€ / personne)
+    </div>
+
+    <div class="summary-box">
+        <strong>Accord Sake (Sake Tasting Pairing)</strong><br>
+        <p>
+            4 dégustations de saké servies au fil du repas,
+            sélectionnées pour accompagner chaque étape du menu.
+            Idéal pour découvrir différentes expressions du saké japonais.
+            <br><br>
+    
+            • Quantité totale : env. 240 ml (1 personne)<br>
+            • Servi en petites portions pour accompagner chaque plat<br>
+            • Convient aux curieux comme aux amateurs<br><br>
+    
+            <strong>Tarifs :</strong><br>
+            30 € / 1 personne<br>
+            50 € / 2 personnes
+            <br><br>
+            <em>Disponible avec tous nos menus.</em>
+        </p><br>
+
+        <label class="optin-label">
+            <input type="checkbox" id="sake">
+            Accord Saké (optionnel)
+        </label>
+    </div>
+
+        <div class="nav-btns">
+            <button id="backFromMenu">Retour</button>
+            <button id="toStep4">Continuer</button>
+        </div>
+    </div>
+    
 
     <!-- STEP 4 ---------------------------------------------------->
     <div class="step" id="step4">
@@ -176,7 +245,6 @@
             <button id="sendReservation">Envoyer</button>
         </div>
     </div>
-
 
 
     <!-- STEP 5 ---------------------------------------------------->
