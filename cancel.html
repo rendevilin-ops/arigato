@@ -4,7 +4,21 @@
   <meta charset="UTF-8">
   <title>予約キャンセル</title>
   <style>
-    body { font-family: sans-serif; padding: 40px; text-align: center; }
+    body {
+      font-family: sans-serif;
+      padding: 40px;
+      text-align: center;
+    }
+
+    .card {
+      border: 1px solid #ddd;
+      padding: 20px;
+      margin: 20px auto;
+      max-width: 400px;
+      border-radius: 8px;
+      text-align: left;
+    }
+
     button {
       padding: 12px 24px;
       font-size: 16px;
@@ -14,6 +28,7 @@
       border-radius: 6px;
       cursor: pointer;
     }
+
     button:disabled {
       opacity: 0.5;
       cursor: not-allowed;
@@ -24,7 +39,9 @@
 
 <h2>Reservation Cancellation</h2>
 
-<p id="message">予約IDを確認中...</p>
+<p id="message">予約情報を読み込み中...</p>
+
+<div id="reservationCard" class="card" style="display:none;"></div>
 
 <button id="cancelBtn" style="display:none;">
   キャンセルする
@@ -36,19 +53,70 @@ const id = params.get("id");
 
 const messageEl = document.getElementById("message");
 const btn = document.getElementById("cancelBtn");
+const card = document.getElementById("reservationCard");
 
-if (!id) {
-  messageEl.innerText = "予約IDが見つかりません。";
-} else {
-  messageEl.innerText = "この予約をキャンセルしますか？";
-  btn.style.display = "inline-block";
+let reservationData = null;
+
+// -----------------------------
+// ① 予約取得
+// -----------------------------
+async function loadReservation() {
+  if (!id) {
+    messageEl.innerText = "予約IDが見つかりません。";
+    return;
+  }
+
+  try {
+    const res = await fetch(
+      `https://arigato-admin.vercel.app/api/reservations/get?id=${id}`
+    );
+
+    if (!res.ok) {
+      messageEl.innerText = "予約が見つかりません。";
+      return;
+    }
+
+    const data = await res.json();
+    reservationData = data.reservation;
+
+    // -----------------------------
+    // ② 予約情報表示
+    // -----------------------------
+    card.innerHTML = `
+      <strong>Name:</strong> ${reservationData.FirstName} ${reservationData.LastName}<br>
+      <strong>Date:</strong> ${reservationData.date}<br>
+      <strong>Service:</strong> ${reservationData.service}<br>
+      <strong>Arrival:</strong> ${reservationData.ArrivalTime}<br>
+      <strong>Pax:</strong> ${reservationData.Pax}
+    `;
+
+    card.style.display = "block";
+    btn.style.display = "inline-block";
+    messageEl.innerText = "この予約をキャンセルしますか？";
+
+  } catch (err) {
+    messageEl.innerText = "通信エラーが発生しました。";
+  }
 }
 
+loadReservation();
+
+// -----------------------------
+// ③ キャンセル処理
+// -----------------------------
 btn.addEventListener("click", async () => {
+  if (!reservationData) return;
+
   btn.disabled = true;
   messageEl.innerText = "キャンセル処理中...";
 
   try {
+    const updatedReservation = {
+      ...reservationData,
+      Status: "cancelled",
+      UpdateAt: new Date().toISOString()
+    };
+
     const res = await fetch(
       "https://arigato-admin.vercel.app/api/reservations/update-status",
       {
@@ -56,18 +124,14 @@ btn.addEventListener("click", async () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           type: "reservation_update",
-          reservation: {
-            ReservationID: id,
-            Status: "cancelled",
-            UpdateAt: new Date().toISOString()
-          }
+          reservation: updatedReservation
         })
       }
     );
 
-    const data = await res.json();
+    const result = await res.json();
 
-    if (data.ok) {
+    if (result.ok) {
       messageEl.innerText =
         "キャンセルが完了しました。ご利用ありがとうございました。";
       btn.style.display = "none";
@@ -75,6 +139,7 @@ btn.addEventListener("click", async () => {
       messageEl.innerText = "キャンセルに失敗しました。";
       btn.disabled = false;
     }
+
   } catch (err) {
     messageEl.innerText = "通信エラーが発生しました。";
     btn.disabled = false;
