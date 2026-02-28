@@ -48,18 +48,6 @@
 </button>
 
 <script>
-const params = new URLSearchParams(window.location.search);
-const id = params.get("id");
-
-const messageEl = document.getElementById("message");
-const btn = document.getElementById("cancelBtn");
-const card = document.getElementById("reservationCard");
-
-let reservationData = null;
-
-// -----------------------------
-// ① 予約取得
-// -----------------------------
 async function loadReservation() {
   if (!id) {
     messageEl.innerText = "予約IDが見つかりません。";
@@ -79,9 +67,7 @@ async function loadReservation() {
     const data = await res.json();
     reservationData = data.reservation;
 
-    // -----------------------------
-    // ② 予約情報表示
-    // -----------------------------
+    // 予約情報表示
     card.innerHTML = `
       <strong>Name:</strong> ${reservationData.FirstName} ${reservationData.LastName}<br>
       <strong>Date:</strong> ${reservationData.date}<br>
@@ -91,60 +77,22 @@ async function loadReservation() {
     `;
 
     card.style.display = "block";
-    btn.style.display = "inline-block";
-    messageEl.innerText = "この予約をキャンセルしますか？";
+
+    // 🔥 二重キャンセル防止
+    if (reservationData.Status === "cancelled") {
+      messageEl.innerText =
+        "この予約は既にキャンセルされています。";
+      btn.style.display = "none";
+    } else {
+      messageEl.innerText =
+        "この予約をキャンセルしますか？";
+      btn.style.display = "inline-block";
+    }
 
   } catch (err) {
     messageEl.innerText = "通信エラーが発生しました。";
   }
 }
-
-loadReservation();
-
-// -----------------------------
-// ③ キャンセル処理
-// -----------------------------
-btn.addEventListener("click", async () => {
-  if (!reservationData) return;
-
-  btn.disabled = true;
-  messageEl.innerText = "キャンセル処理中...";
-
-  try {
-    const updatedReservation = {
-      ...reservationData,
-      Status: "cancelled",
-      UpdateAt: new Date().toISOString()
-    };
-
-    const res = await fetch(
-      "https://arigato-admin.vercel.app/api/reservations/update-status",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          type: "reservation_update",
-          reservation: updatedReservation
-        })
-      }
-    );
-
-    const result = await res.json();
-
-    if (result.ok) {
-      messageEl.innerText =
-        "キャンセルが完了しました。ご利用ありがとうございました。";
-      btn.style.display = "none";
-    } else {
-      messageEl.innerText = "キャンセルに失敗しました。";
-      btn.disabled = false;
-    }
-
-  } catch (err) {
-    messageEl.innerText = "通信エラーが発生しました。";
-    btn.disabled = false;
-  }
-});
 </script>
 
 </body>
