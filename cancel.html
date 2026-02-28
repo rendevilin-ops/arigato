@@ -3,52 +3,87 @@
 <head>
   <meta charset="UTF-8">
   <title>予約キャンセル</title>
+  <style>
+    body { font-family: sans-serif; padding: 40px; text-align: center; }
+    button {
+      padding: 12px 24px;
+      font-size: 16px;
+      background: #c62828;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  </style>
 </head>
 <body>
 
-<h2>予約キャンセル</h2>
-<div id="message">処理中...</div>
+<h2>Reservation Cancellation</h2>
+
+<p id="message">予約IDを確認中...</p>
+
+<button id="cancelBtn" style="display:none;">
+  キャンセルする
+</button>
 
 <script>
-(async () => {
+const params = new URLSearchParams(window.location.search);
+const id = params.get("id");
 
-  // URLからID取得
-  const params = new URLSearchParams(window.location.search);
-  const id = params.get("id");
+const messageEl = document.getElementById("message");
+const btn = document.getElementById("cancelBtn");
 
-  if (!id) {
-    document.getElementById("message").innerText =
-      "予約IDが見つかりません。メールのリンクをご確認ください。";
-    return;
-  }
+if (!id) {
+  messageEl.innerText = "予約IDが見つかりません。";
+} else {
+  messageEl.innerText =
+    "この予約をキャンセルしますか？";
+  btn.style.display = "inline-block";
+}
 
-  const apiUrl = "https://admin.arigato-five.vercel.app/api/cancel";
+btn.addEventListener("click", async () => {
+  btn.disabled = true;
+  messageEl.innerText = "キャンセル処理中...";
 
   try {
-    const res = await fetch(apiUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ id })
-    });
+    const res = await fetch(
+      "https://admin.arigato-five.vercel.app/api/reservations/update-status",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: "reservation_update",
+          reservation: {
+            ReservationID: id,
+            Status: "cancelled",
+            UpdateAt: new Date().toISOString()
+          }
+        })
+      }
+    );
 
     const data = await res.json();
 
-    if (data.success) {
-      document.getElementById("message").innerText =
+    if (data.ok) {
+      messageEl.innerText =
         "キャンセルが完了しました。ご利用ありがとうございました。";
+      btn.style.display = "none";
     } else {
-      document.getElementById("message").innerText =
-        "キャンセルに失敗しました: " + (data.error || "不明なエラー");
+      messageEl.innerText =
+        "キャンセルに失敗しました。";
+      btn.disabled = false;
     }
 
   } catch (err) {
-    document.getElementById("message").innerText =
-      "通信エラーが発生しました: " + err.message;
+    messageEl.innerText =
+      "通信エラーが発生しました。";
+    btn.disabled = false;
   }
-
-})();
+});
 </script>
 
 </body>
