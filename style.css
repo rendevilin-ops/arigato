@@ -273,6 +273,38 @@ input[type="checkbox"] {
     100% { transform: rotate(360deg); }
 }
 
+/* ========== CANCEL PAGE ========== */
+
+.cancel-wrapper {
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+}
+
+.cancel-card {
+    background: #FFF8F4;
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid #E4D5CF;
+    margin-top: 16px;
+}
+
+.cancel-card p {
+    margin: 6px 0;
+}
+
+/* textareaサイズ調整 */
+#comment {
+    min-height: 110px;
+    max-height: 200px;
+    resize: vertical;
+    background: #FFF8F4;
+}
+
+/* ボタン幅を他と統一 */
+#cancelBtn {
+    margin-top: 20px;
+}
 
 
 
