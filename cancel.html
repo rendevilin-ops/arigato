@@ -16,7 +16,7 @@ export default async function handler(req, res) {
     `https://pumped-falcon-8164.upstash.io/get/reservation:${id}`,
     {
       headers: {
-        Authorization: "redis-cli --tls -u redis://default:AR_kAAImcDE5MDQ3NzgyNGFiODY0Y2QwYjZmNmJmY2Q1MjdhMTdhY3AxODE2NA@pumped-falcon-8164.upstash.io:6379"
+        Authorization: "Bearer YOUR_TOKEN"
       }
     }
   );
@@ -37,7 +37,7 @@ export default async function handler(req, res) {
     {
       method: "POST",
       headers: {
-        Authorization: "redis-cli --tls -u redis://default:AR_kAAImcDE5MDQ3NzgyNGFiODY0Y2QwYjZmNmJmY2Q1MjdhMTdhY3AxODE2NA@pumped-falcon-8164.upstash.io:6379",
+        Authorization: "Bearer YOUR_TOKEN",
         "Content-Type": "application/json"
       },
       body: JSON.stringify(reservation)
