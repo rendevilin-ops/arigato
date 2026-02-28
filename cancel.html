@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>予約キャンセル</title>
+  <title>Annulation de réservation</title>
   <style>
     body {
       font-family: sans-serif;
@@ -39,12 +39,17 @@
 
 <h2>Reservation Cancellation</h2>
 
-<p id="message">予約情報を読み込み中...</p>
+<p id="message">Chargement des informations de réservation...</p>
 
 <div id="reservationCard" class="card" style="display:none;"></div>
 
+  <label>
+Si vous le souhaitez, vous pouvez nous indiquer la raison de votre annulation. Cela nous aidera à améliorer notre service.<br>
+<textarea id="comment" rows="4" style="width:100%;"></textarea>
+</label>
+  
 <button id="cancelBtn" style="display:none;">
-  キャンセルする
+  Annuler la réservation
 </button>
 
 <script>
@@ -59,7 +64,7 @@ let reservationData = null;
 
 async function loadReservation() {
   if (!id) {
-    messageEl.innerText = "予約IDが見つかりません。";
+    messageEl.innerText = "Réservation introuvable.";
     return;
   }
 
@@ -71,7 +76,7 @@ async function loadReservation() {
     const data = await res.json();
 
     if (!res.ok || !data.reservation) {
-      messageEl.innerText = "予約が見つかりません。";
+      messageEl.innerText = "Réservation introuvable.";
       return;
     }
 
@@ -88,16 +93,16 @@ async function loadReservation() {
     card.style.display = "block";
 
     if (reservationData.Status === "cancelled") {
-      messageEl.innerText = "この予約は既にキャンセルされています。";
+      messageEl.innerText = "Cette réservation a déjà été annulée.";
       btn.style.display = "none";
     } else {
-      messageEl.innerText = "この予約をキャンセルしますか？";
+      messageEl.innerText = "Souhaitez-vous annuler cette réservation ?";
       btn.style.display = "inline-block";
     }
 
   } catch (err) {
     console.error(err);
-    messageEl.innerText = "通信エラーが発生しました。";
+    messageEl.innerText = "Une erreur est survenue. Veuillez réessayer.";
   }
 }
 
@@ -105,7 +110,7 @@ btn.addEventListener("click", async () => {
   if (!reservationData) return;
 
   btn.disabled = true;
-  messageEl.innerText = "キャンセル処理中...";
+  messageEl.innerText = "Annulation en cours...";
 
   try {
     const updatedReservation = {
@@ -130,15 +135,15 @@ btn.addEventListener("click", async () => {
 
     if (result.ok) {
       messageEl.innerText =
-        "キャンセルが完了しました。ご利用ありがとうございました。";
+        "Votre réservation a bien été annulée. Nous espérons vous accueillir prochainement chez Arigato.";
       btn.style.display = "none";
     } else {
-      messageEl.innerText = "キャンセルに失敗しました。";
+      messageEl.innerText = "Une erreur est survenue. Veuillez réessayer.";
       btn.disabled = false;
     }
 
   } catch (err) {
-    messageEl.innerText = "通信エラーが発生しました。";
+    messageEl.innerText = "Une erreur de connexion est survenue. Veuillez réessayer.";
     btn.disabled = false;
   }
 });
