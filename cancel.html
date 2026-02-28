@@ -6,23 +6,17 @@
 </head>
 <body>
 
-<h2>予約キャンセル</h2>
-<div id="message">読み込み中…</div>
+<h2>予約キャンセル中…</h2>
+<div id="message">処理中...</div>
 
 <script>
 (async () => {
-  const params = new URLSearchParams(window.location.search);
-  const id = params.get("id");
+  const id = "0e04f1d2-ec83-40e7-8002-53428a476d1b"; // 今試したいID
 
-  if (!id) {
-    document.getElementById("message").innerText = "キャンセルIDがありません";
-    return;
-  }
-
-  document.getElementById("message").innerText = "キャンセル処理中…";
+  const apiUrl = "https://arigato-admin.vercel.app/api/cancel";
 
   try {
-    const res = await fetch("https://あなたの-arigato-admin-domain.vercel.app/api/cancel", {
+    const res = await fetch(apiUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -33,12 +27,14 @@
     const data = await res.json();
 
     if (data.success) {
-      document.getElementById("message").innerText = "キャンセルが完了しました。";
+      document.getElementById("message").innerText = "キャンセルが完了しました 🎉";
     } else {
-      document.getElementById("message").innerText = "キャンセルに失敗しました: " + (data.error || "");
+      document.getElementById("message").innerText =
+        "キャンセルに失敗しました: " + (data.error || "不明なエラー");
     }
   } catch (err) {
-    document.getElementById("message").innerText = "エラーが発生しました: " + err.message;
+    document.getElementById("message").innerText =
+      "通信エラーが発生しました: " + err.message;
   }
 })();
 </script>
