@@ -113,9 +113,12 @@ btn.addEventListener("click", async () => {
   messageEl.innerText = "Annulation en cours...";
 
   try {
+    const comment = document.getElementById("comment").value;
+    
     const updatedReservation = {
       ...reservationData,
       Status: "cancelled",
+      Commentaire: comment || reservationData.Commentaire,
       UpdateAt: new Date().toISOString()
     };
 
