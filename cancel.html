@@ -48,6 +48,15 @@
 </button>
 
 <script>
+const params = new URLSearchParams(window.location.search);
+const id = params.get("id");
+
+const messageEl = document.getElementById("message");
+const btn = document.getElementById("cancelBtn");
+const card = document.getElementById("reservationCard");
+
+let reservationData = null;
+
 async function loadReservation() {
   if (!id) {
     messageEl.innerText = "予約IDが見つかりません。";
@@ -59,10 +68,7 @@ async function loadReservation() {
       `https://arigato-admin.vercel.app/api/reservations/get?id=${id}`
     );
 
-    console.log("GET status:", res.status);
-
     const data = await res.json();
-    console.log("GET data:", data);
 
     if (!res.ok || !data.reservation) {
       messageEl.innerText = "予約が見つかりません。";
@@ -72,7 +78,7 @@ async function loadReservation() {
     reservationData = data.reservation;
 
     card.innerHTML = `
-      <strong>Name:</strong> ${reservationData.FirstName}<br>
+      <strong>Name:</strong> ${reservationData.FirstName} ${reservationData.LastName}<br>
       <strong>Date:</strong> ${reservationData.date}<br>
       <strong>Service:</strong> ${reservationData.service}<br>
       <strong>Arrival:</strong> ${reservationData.ArrivalTime}<br>
@@ -94,6 +100,48 @@ async function loadReservation() {
     messageEl.innerText = "通信エラーが発生しました。";
   }
 }
+
+btn.addEventListener("click", async () => {
+  if (!reservationData) return;
+
+  btn.disabled = true;
+  messageEl.innerText = "キャンセル処理中...";
+
+  try {
+    const updatedReservation = {
+      ...reservationData,
+      Status: "cancelled",
+      UpdateAt: new Date().toISOString()
+    };
+
+    const res = await fetch(
+      "https://arigato-admin.vercel.app/api/reservations/update-status",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: "reservation_update",
+          reservation: updatedReservation
+        })
+      }
+    );
+
+    const result = await res.json();
+
+    if (result.ok) {
+      messageEl.innerText =
+        "キャンセルが完了しました。ご利用ありがとうございました。";
+      btn.style.display = "none";
+    } else {
+      messageEl.innerText = "キャンセルに失敗しました。";
+      btn.disabled = false;
+    }
+
+  } catch (err) {
+    messageEl.innerText = "通信エラーが発生しました。";
+    btn.disabled = false;
+  }
+});
 
 loadReservation();
 </script>
