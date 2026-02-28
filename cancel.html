@@ -49,22 +49,21 @@ btn.addEventListener("click", async () => {
   btn.disabled = true;
   messageEl.innerText = "キャンセル処理中...";
 
-  try {
-    const res = await fetch(
-      "https://arigato-admin.vercel.app/admin/reservations/update-status/update-status",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          type: "reservation_update",
-          reservation: {
-            ReservationID: id,
-            Status: "cancelled",
-            UpdateAt: new Date().toISOString()
-          }
-        })
-      }
-    );
+  await fetch(
+    "https://arigato-admin.vercel.app/api/reservations/update-status",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        type: "reservation_update",
+        reservation: {
+          ReservationID: id,
+          Status: "cancelled",
+          UpdateAt: new Date().toISOString()
+        }
+      })
+    }
+  );
 
     const data = await res.json();
 
