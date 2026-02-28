@@ -59,17 +59,20 @@ async function loadReservation() {
       `https://arigato-admin.vercel.app/api/reservations/get?id=${id}`
     );
 
-    if (!res.ok) {
+    console.log("GET status:", res.status);
+
+    const data = await res.json();
+    console.log("GET data:", data);
+
+    if (!res.ok || !data.reservation) {
       messageEl.innerText = "予約が見つかりません。";
       return;
     }
 
-    const data = await res.json();
     reservationData = data.reservation;
 
-    // 予約情報表示
     card.innerHTML = `
-      <strong>Name:</strong> ${reservationData.FirstName} ${reservationData.LastName}<br>
+      <strong>Name:</strong> ${reservationData.FirstName}<br>
       <strong>Date:</strong> ${reservationData.date}<br>
       <strong>Service:</strong> ${reservationData.service}<br>
       <strong>Arrival:</strong> ${reservationData.ArrivalTime}<br>
@@ -78,21 +81,21 @@ async function loadReservation() {
 
     card.style.display = "block";
 
-    // 🔥 二重キャンセル防止
     if (reservationData.Status === "cancelled") {
-      messageEl.innerText =
-        "この予約は既にキャンセルされています。";
+      messageEl.innerText = "この予約は既にキャンセルされています。";
       btn.style.display = "none";
     } else {
-      messageEl.innerText =
-        "この予約をキャンセルしますか？";
+      messageEl.innerText = "この予約をキャンセルしますか？";
       btn.style.display = "inline-block";
     }
 
   } catch (err) {
+    console.error(err);
     messageEl.innerText = "通信エラーが発生しました。";
   }
 }
+
+loadReservation();
 </script>
 
 </body>
