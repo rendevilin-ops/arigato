@@ -1,1 +1,48 @@
 
+export default async function handler(req, res) {
+
+  if (req.method !== "POST") {
+    return res.status(405).json({ success: false });
+  }
+
+  const { id } = req.body;
+
+  if (!id) {
+    return res.status(400).json({ success: false });
+  }
+
+  // Redisから取得
+  const redisRes = await fetch(
+    `https://pumped-falcon-8164.upstash.io/get/reservation:${id}`,
+    {
+      headers: {
+        Authorization: "Bearer あなたのトークン"
+      }
+    }
+  );
+
+  const redisData = await redisRes.json();
+
+  if (!redisData.result) {
+    return res.status(404).json({ success: false });
+  }
+
+  const reservation = JSON.parse(redisData.result);
+
+  reservation.status = "canceled";
+
+  // 保存し直す
+  await fetch(
+    `https://pumped-falcon-8164.upstash.io/set/reservation:${id}`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer あなたのトークン",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(reservation)
+    }
+  );
+
+  return res.json({ success: true });
+}
