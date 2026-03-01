@@ -183,7 +183,7 @@ function setToday() {
     
     // ★ 14日後の max を設定
     const future = new Date();
-    future.setDate(future.getDate() + 21); // 21日後
+    future.setDate(future.getDate() + 28); // 28日後
 
     const yyyy2 = future.getFullYear();
     const mm2 = String(future.getMonth() + 1).padStart(2, "0");
@@ -545,6 +545,7 @@ document.getElementById("sendReservation").onclick = async () => {
         showStep(5);
     }
 };
+
 
 
 
