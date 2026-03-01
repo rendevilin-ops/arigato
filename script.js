@@ -103,6 +103,13 @@ function updateStatus(service, data) {
     // ---------- ここで締切チェック ----------
     const date = document.getElementById("resDate").value;
 
+    if (isServiceClosed(date, service)) {
+        statusEl.textContent = "Fermé";
+        btn.disabled = true;
+        btn.classList.add("disabled");
+        return;
+    }
+    
     if (isAllTimesClosed(date, service)) {
         statusEl.textContent = "Indisponible";
         btn.disabled = true;
@@ -165,7 +172,16 @@ function isAllTimesClosed(dateStr, service) {
     return times.every(t => isTooLate(dateStr, t));
 }
 
+// ★ 休日
+function isServiceClosed(dateStr, service) {
+    const d = new Date(dateStr);
+    const day = d.getDay(); // 0=Sun, 1=Mon, 2=Tue
 
+    if (day === 0 || day === 1) return true;              // 日月休み
+    if (day === 2 && service === "lunch") return true;   // 火曜昼休み
+
+    return false;
+}
 
 
 /* Step1 — 日付 */
@@ -551,6 +567,7 @@ document.getElementById("sendReservation").onclick = async () => {
         showStep(5);
     }
 };
+
 
 
 
