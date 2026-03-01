@@ -220,14 +220,14 @@ function changeDate(d) {
 function updatePaxLimit(seats) {
     const paxSelect = document.getElementById("resPax");
 
-    // 一旦全部消して作り直す
+    // ★ 現在選択されている値を保持
+    const currentValue = paxSelect.value;
+
     paxSelect.innerHTML = "";
 
-    // seats が null や undefined の場合は 7 固定で作る
     const max = seats > 0 ? seats : 0;
 
     if (max === 0) {
-        // 空席が 0 の場合は選択不可 (option にメッセージだけ表示)
         const opt = document.createElement("option");
         opt.textContent = "0 (complet)";
         opt.value = 0;
@@ -243,6 +243,12 @@ function updatePaxLimit(seats) {
         opt.value = i;
         opt.textContent = i;
         paxSelect.appendChild(opt);
+    }
+
+    // ★ 以前の値がまだ有効なら戻す
+    if (currentValue) {
+        const adjusted = Math.min(currentValue, max);
+        paxSelect.value = adjusted;
     }
 }
 
@@ -545,6 +551,7 @@ document.getElementById("sendReservation").onclick = async () => {
         showStep(5);
     }
 };
+
 
 
 
